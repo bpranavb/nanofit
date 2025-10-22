@@ -11,7 +11,8 @@ import uuid
 from datetime import datetime
 import asyncio
 import base64
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 
 ROOT_DIR = Path(__file__).parent

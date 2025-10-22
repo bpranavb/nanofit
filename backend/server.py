@@ -104,7 +104,19 @@ async def create_tryon(request: TryOnRequest):
             mime_type="image/jpeg"
         )
         
-        text_part = "Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."
+        text_part = """
+**Objective:** Perform a virtual try-on. You will be given two images.
+- **Image 1 (The Person):** This is the base image. The person, their pose, and the background MUST be preserved.
+- **Image 2 (The Clothing):** This image contains the target clothing.
+
+**Your Task (Follow these steps precisely):**
+1.  Analyze Image 2 to identify ONLY the clothing items (e.g., shirt, pants, dress).
+2.  Completely IGNORE the person, mannequin, or background in Image 2. Your focus is solely on the garments' style, color, and texture.
+3.  EDIT Image 1. Replace the clothes the person is wearing with the garments you identified from Image 2.
+4.  The result must be a photorealistic image of the person from Image 1 wearing the new clothes from Image 2.
+
+**!! IMPORTANT CONSTRAINT !!**
+The output image MUST be different from the input Image 1. Returning the original person image without changing the clothes is an incorrect result. Generate a new image showing the successful clothing swap."""
         
         logger.info("Calling Gemini 2.5 Flash Image model...")
         

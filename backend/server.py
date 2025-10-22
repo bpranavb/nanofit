@@ -84,72 +84,85 @@ async def create_tryon(request: TryOnRequest):
             raise HTTPException(status_code=500, detail="Gemini API key not configured")
         
         tryon_id = str(uuid.uuid4())
+        session_id_analysis = str(uuid.uuid4())
+        session_id_generation = str(uuid.uuid4())
         
-        logger.info("Converting base64 images to PIL Images...")
+        logger.info("Step 1: Analyzing person image...")
         
-        # Convert base64 images to PIL Images
-        person_image_bytes = base64.b64decode(request.person_image)
-        person_pil = PILImage.open(BytesIO(person_image_bytes))
+        # Step 1: Analyze the person image to get detailed description
+        chat_person = LlmChat(
+            api_key=gemini_api_key,
+            session_id=session_id_analysis,
+            system_message="You are an expert at analyzing images and providing detailed descriptions."
+        )
+        chat_person.with_model("gemini", "gemini-2.0-flash-exp")
         
-        clothing_image_bytes = base64.b64decode(request.clothing_image)
-        clothing_pil = PILImage.open(BytesIO(clothing_image_bytes))
-        
-        # Save temporarily to files (required by GenAI SDK)
-        person_temp_path = f"/tmp/person_{tryon_id}.jpg"
-        clothing_temp_path = f"/tmp/clothing_{tryon_id}.jpg"
-        
-        person_pil.save(person_temp_path, format='JPEG')
-        clothing_pil.save(clothing_temp_path, format='JPEG')
-        
-        logger.info(f"Saved temporary images: {person_temp_path}, {clothing_temp_path}")
-        
-        # Initialize Google Gen AI client
-        client = genai.Client(api_key=gemini_api_key)
-        
-        logger.info("Loading images with Gen AI SDK...")
-        
-        # Load images using Gen AI SDK
-        person_img = GenAIImage.from_file(location=person_temp_path)
-        product_img = GenAIImage.from_file(location=clothing_temp_path)
-        
-        logger.info("Calling virtual try-on model...")
-        
-        # Call the virtual try-on model
-        response = client.models.recontext_image(
-            model="virtual-try-on-preview-08-04",
-            source=RecontextImageSource(
-                person_image=person_img,
-                product_images=[ProductImage(product_image=product_img)],
-            )
+        msg_person = UserMessage(
+            text="Describe this person in detail: their physical appearance, pose, body type, facial features, skin tone, and any visible characteristics. Be specific and detailed.",
+            file_contents=[ImageContent(request.person_image)]
         )
         
-        logger.info("Received response from virtual try-on model")
+        person_description = await chat_person.send_message(msg_person)
+        logger.info(f"Person description: {person_description[:200]}...")
         
-        # Check if we got generated images
-        if not response.generated_images or len(response.generated_images) == 0:
-            logger.error("No images returned from virtual try-on model")
+        logger.info("Step 2: Analyzing clothing image...")
+        
+        # Step 2: Analyze the clothing image
+        chat_clothing = LlmChat(
+            api_key=gemini_api_key,
+            session_id=f"{session_id_analysis}_clothing",
+            system_message="You are an expert at analyzing fashion and clothing items."
+        )
+        chat_clothing.with_model("gemini", "gemini-2.0-flash-exp")
+        
+        msg_clothing = UserMessage(
+            text="Describe this clothing item in detail: the type of garment, color, pattern, style, material, fit, and any distinctive features. Be specific about the design.",
+            file_contents=[ImageContent(request.clothing_image)]
+        )
+        
+        clothing_description = await chat_clothing.send_message(msg_clothing)
+        logger.info(f"Clothing description: {clothing_description[:200]}...")
+        
+        logger.info("Step 3: Generating virtual try-on image...")
+        
+        # Step 3: Generate the try-on image using Gemini image generation
+        chat_generate = LlmChat(
+            api_key=gemini_api_key,
+            session_id=session_id_generation,
+            system_message="You are an expert at generating photorealistic images."
+        )
+        chat_generate.with_model("gemini", "gemini-2.5-flash-image-preview").with_params(
+            modalities=["image", "text"]
+        )
+        
+        # Create a detailed prompt combining both descriptions
+        generation_prompt = f"""Generate a photorealistic image of a person wearing specific clothing.
+
+Person details: {person_description}
+
+Clothing to wear: {clothing_description}
+
+Create a natural, professional photo showing this person wearing the described clothing. The image should look realistic with proper lighting, natural poses, and the clothing fitting naturally on the person. Maintain the person's appearance and characteristics while showing them in the new outfit. Generate the image in portrait orientation."""
+        
+        msg_generate = UserMessage(text=generation_prompt)
+        
+        # Generate image
+        text_response, images = await chat_generate.send_message_multimodal_response(msg_generate)
+        
+        logger.info(f"Generation response - Text: {text_response[:200] if text_response else 'None'}...")
+        logger.info(f"Number of images returned: {len(images) if images else 0}")
+        
+        if not images or len(images) == 0:
+            logger.error("No images returned from Gemini image generation")
+            logger.error(f"Full text response: {text_response}")
             raise HTTPException(
                 status_code=500,
-                detail="Failed to generate try-on image. No image was returned from the virtual try-on model."
+                detail="Failed to generate try-on image. The model did not return an image. This might be due to API limitations. Please try with different images or contact support."
             )
         
-        # Get the first generated image and convert to base64
-        generated_image = response.generated_images[0].image
-        
-        # Save to BytesIO and convert to base64
-        output_buffer = BytesIO()
-        generated_image.save(output_buffer, format='PNG')
-        result_image_base64 = base64.b64encode(output_buffer.getvalue()).decode('utf-8')
-        
+        # Get the generated image
+        result_image_base64 = images[0]['data']
         logger.info(f"Successfully generated image. Size: {len(result_image_base64)} characters")
-        
-        # Clean up temporary files
-        import os as os_module
-        try:
-            os_module.remove(person_temp_path)
-            os_module.remove(clothing_temp_path)
-        except:
-            pass
         
         # Save to database
         tryon_record = {

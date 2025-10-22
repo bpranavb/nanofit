@@ -82,85 +82,65 @@ async def create_tryon(request: TryOnRequest):
             raise HTTPException(status_code=500, detail="Gemini API key not configured")
         
         tryon_id = str(uuid.uuid4())
-        session_id_analysis = str(uuid.uuid4())
-        session_id_generation = str(uuid.uuid4())
         
-        logger.info("Step 1: Analyzing person image...")
+        # Configure Gemini
+        genai.configure(api_key=gemini_api_key)
         
-        # Step 1: Analyze the person image to get detailed description
-        chat_person = LlmChat(
-            api_key=gemini_api_key,
-            session_id=session_id_analysis,
-            system_message="You are an expert at analyzing images and providing detailed descriptions."
-        )
-        chat_person.with_model("gemini", "gemini-2.0-flash-exp")
+        logger.info("Preparing images for Gemini...")
         
-        msg_person = UserMessage(
-            text="Describe this person in detail: their physical appearance, pose, body type, facial features, skin tone, and any visible characteristics. Be specific and detailed.",
-            file_contents=[ImageContent(request.person_image)]
-        )
+        # Prepare image parts with inline data (base64)
+        person_image_part = {
+            "inline_data": {
+                "mime_type": "image/jpeg",
+                "data": request.person_image
+            }
+        }
         
-        person_description = await chat_person.send_message(msg_person)
-        logger.info(f"Person description: {person_description[:200]}...")
+        clothing_image_part = {
+            "inline_data": {
+                "mime_type": "image/jpeg", 
+                "data": request.clothing_image
+            }
+        }
         
-        logger.info("Step 2: Analyzing clothing image...")
+        text_part = "Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."
         
-        # Step 2: Analyze the clothing image
-        chat_clothing = LlmChat(
-            api_key=gemini_api_key,
-            session_id=f"{session_id_analysis}_clothing",
-            system_message="You are an expert at analyzing fashion and clothing items."
-        )
-        chat_clothing.with_model("gemini", "gemini-2.0-flash-exp")
+        logger.info("Calling Gemini 2.5 Flash Image model...")
         
-        msg_clothing = UserMessage(
-            text="Describe this clothing item in detail: the type of garment, color, pattern, style, material, fit, and any distinctive features. Be specific about the design.",
-            file_contents=[ImageContent(request.clothing_image)]
-        )
+        # Create the model
+        model = genai.GenerativeModel('gemini-2.5-flash-image')
         
-        clothing_description = await chat_clothing.send_message(msg_clothing)
-        logger.info(f"Clothing description: {clothing_description[:200]}...")
-        
-        logger.info("Step 3: Generating virtual try-on image...")
-        
-        # Step 3: Generate the try-on image using Gemini image generation
-        chat_generate = LlmChat(
-            api_key=gemini_api_key,
-            session_id=session_id_generation,
-            system_message="You are an expert at generating photorealistic images."
-        )
-        chat_generate.with_model("gemini", "gemini-2.5-flash-image-preview").with_params(
-            modalities=["image", "text"]
+        # Generate content with response_modalities set to IMAGE
+        response = await asyncio.to_thread(
+            model.generate_content,
+            [person_image_part, clothing_image_part, text_part],
+            generation_config=genai.GenerationConfig(
+                response_modalities=["image"]
+            )
         )
         
-        # Create a detailed prompt combining both descriptions
-        generation_prompt = f"""Generate a photorealistic image of a person wearing specific clothing.
-
-Person details: {person_description}
-
-Clothing to wear: {clothing_description}
-
-Create a natural, professional photo showing this person wearing the described clothing. The image should look realistic with proper lighting, natural poses, and the clothing fitting naturally on the person. Maintain the person's appearance and characteristics while showing them in the new outfit. Generate the image in portrait orientation."""
+        logger.info("Received response from Gemini")
+        logger.info(f"Response candidates: {len(response.candidates) if response.candidates else 0}")
         
-        msg_generate = UserMessage(text=generation_prompt)
+        # Find the image part in the response
+        result_image_base64 = None
         
-        # Generate image
-        text_response, images = await chat_generate.send_message_multimodal_response(msg_generate)
+        if response.candidates and len(response.candidates) > 0:
+            candidate = response.candidates[0]
+            if candidate.content and candidate.content.parts:
+                for part in candidate.content.parts:
+                    if hasattr(part, 'inline_data') and part.inline_data:
+                        result_image_base64 = part.inline_data.data
+                        logger.info(f"Found generated image in response. Size: {len(result_image_base64)} characters")
+                        break
         
-        logger.info(f"Generation response - Text: {text_response[:200] if text_response else 'None'}...")
-        logger.info(f"Number of images returned: {len(images) if images else 0}")
-        
-        if not images or len(images) == 0:
-            logger.error("No images returned from Gemini image generation")
-            logger.error(f"Full text response: {text_response}")
+        if not result_image_base64:
+            logger.error("No image found in Gemini response")
+            logger.error(f"Response: {response}")
             raise HTTPException(
                 status_code=500,
-                detail="Failed to generate try-on image. The model did not return an image. This might be due to API limitations. Please try with different images or contact support."
+                detail="Failed to generate try-on image. No image was returned in the response."
             )
-        
-        # Get the generated image
-        result_image_base64 = images[0]['data']
-        logger.info(f"Successfully generated image. Size: {len(result_image_base64)} characters")
         
         # Save to database
         tryon_record = {

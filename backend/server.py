@@ -84,56 +84,55 @@ async def create_tryon(request: TryOnRequest):
         
         tryon_id = str(uuid.uuid4())
         
-        # Configure Gemini
-        genai.configure(api_key=gemini_api_key)
+        # Create Gemini client
+        client = genai.Client(api_key=gemini_api_key)
         
         logger.info("Preparing images for Gemini...")
         
-        # Prepare image parts with inline data (base64)
-        person_image_part = {
-            "inline_data": {
-                "mime_type": "image/jpeg",
-                "data": request.person_image
-            }
-        }
+        # Decode base64 to create Part objects with inline data
+        person_image_bytes = base64.b64decode(request.person_image)
+        clothing_image_bytes = base64.b64decode(request.clothing_image)
         
-        clothing_image_part = {
-            "inline_data": {
-                "mime_type": "image/jpeg", 
-                "data": request.clothing_image
-            }
-        }
+        # Create Part objects for images
+        person_part = types.Part.from_bytes(
+            data=person_image_bytes,
+            mime_type="image/jpeg"
+        )
+        
+        clothing_part = types.Part.from_bytes(
+            data=clothing_image_bytes,
+            mime_type="image/jpeg"
+        )
         
         text_part = "Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."
         
         logger.info("Calling Gemini 2.5 Flash Image model...")
         
-        # Create the model
-        model = genai.GenerativeModel('gemini-2.5-flash-image')
+        # Configure generation settings
+        config = types.GenerateContentConfig(
+            response_modalities=["IMAGE"]
+        )
         
-        # Generate content with response_modalities set to IMAGE
+        # Generate content
         response = await asyncio.to_thread(
-            model.generate_content,
-            [person_image_part, clothing_image_part, text_part],
-            generation_config=genai.GenerationConfig(
-                response_modalities=["image"]
-            )
+            client.models.generate_content,
+            model="gemini-2.5-flash-image",
+            contents=[person_part, clothing_part, text_part],
+            config=config
         )
         
         logger.info("Received response from Gemini")
-        logger.info(f"Response candidates: {len(response.candidates) if response.candidates else 0}")
+        logger.info(f"Response parts: {len(response.parts) if response.parts else 0}")
         
         # Find the image part in the response
         result_image_base64 = None
         
-        if response.candidates and len(response.candidates) > 0:
-            candidate = response.candidates[0]
-            if candidate.content and candidate.content.parts:
-                for part in candidate.content.parts:
-                    if hasattr(part, 'inline_data') and part.inline_data:
-                        result_image_base64 = part.inline_data.data
-                        logger.info(f"Found generated image in response. Size: {len(result_image_base64)} characters")
-                        break
+        for part in response.parts:
+            if part.inline_data is not None:
+                # The data is already base64 encoded
+                result_image_base64 = part.inline_data.data
+                logger.info(f"Found generated image in response. Size: {len(result_image_base64)} characters")
+                break
         
         if not result_image_base64:
             logger.error("No image found in Gemini response")

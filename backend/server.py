@@ -11,8 +11,7 @@ import uuid
 from datetime import datetime
 import asyncio
 import base64
-from google import genai
-from google.genai.types import RecontextImageSource, ProductImage, Image as GenAIImage
+from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
 from io import BytesIO
 from PIL import Image as PILImage
 

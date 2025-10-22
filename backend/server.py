@@ -101,11 +101,10 @@ async def create_tryon(request: TryOnRequest):
         
         logger.info("Sending request to Gemini Nano Banana for try-on...")
         
-        # First approach: Try to generate image with text describing what we want
-        # Based on the integration playbook, for image GENERATION (not editing),
-        # we should only use text without file_contents
+        # Create message: Use the person image and the clothing image together
+        # The model should blend/combine them for virtual try-on
         msg = UserMessage(
-            text="Generate a photorealistic image of a person wearing specific clothing. Create a high-quality, natural-looking portrait with professional lighting and styling.",
+            text="Edit the person in the first image to be wearing the clothing shown in the second image. Blend these images together to create a realistic virtual try-on. Make it look natural and professionally styled, maintaining the person's appearance while changing their outfit to match the clothing in the second image. Generate the final image.",
             file_contents=[
                 ImageContent(request.person_image),
                 ImageContent(request.clothing_image)

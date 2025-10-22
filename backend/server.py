@@ -104,7 +104,7 @@ async def create_tryon(request: TryOnRequest):
             mime_type="image/jpeg"
         )
         
-        text_part = """
+        text_prompt = """
 **Objective:** Perform a virtual try-on. You will be given two images.
 - **Image 1 (The Person):** This is the base image. The person, their pose, and the background MUST be preserved.
 - **Image 2 (The Clothing):** This image contains the target clothing.
@@ -117,6 +117,9 @@ async def create_tryon(request: TryOnRequest):
 
 **!! IMPORTANT CONSTRAINT !!**
 The output image MUST be different from the input Image 1. Returning the original person image without changing the clothes is an incorrect result. Generate a new image showing the successful clothing swap."""
+        
+        # Create text part
+        text_part = types.Part.from_text(text_prompt)
         
         logger.info("Calling Gemini 2.5 Flash Image model...")
         

@@ -11,7 +11,10 @@ import uuid
 from datetime import datetime
 import asyncio
 import base64
-from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+from google import genai
+from google.genai.types import RecontextImageSource, ProductImage, Image as GenAIImage
+from io import BytesIO
+from PIL import Image as PILImage
 
 
 ROOT_DIR = Path(__file__).parent

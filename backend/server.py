@@ -107,22 +107,16 @@ async def create_tryon(request: TryOnRequest):
         text_part = """
 **Objective:** Perform a virtual try-on. You will be given two images.
 - **Image 1 (The Person):** This is the base image. The person, their pose, and the background MUST be preserved.
-- **Image 2 (The Clothing):** This image contains the target clothing items.
+- **Image 2 (The Clothing):** This image contains the target clothing.
 
 **Your Task (Follow these steps precisely):**
-1.  Analyze Image 2 to identify ALL clothing items present (e.g., shirt, pants, dress, jacket, skirt). There may be one or multiple items.
-2.  Completely IGNORE any person, mannequin, or background in Image 2. Your focus is solely on ALL the garments' style, color, texture, and design.
-3.  EDIT Image 1. Replace ALL the clothes the person is currently wearing with ALL the garments you identified from Image 2.
-    - If Image 2 has a shirt AND pants, replace BOTH the shirt AND pants in Image 1.
-    - If Image 2 has a dress, replace the entire outfit in Image 1 with the dress.
-    - If Image 2 has a jacket AND shirt AND pants, replace ALL three items in Image 1.
-4.  The result must be a photorealistic image of the person from Image 1 wearing ALL the new clothes from Image 2.
+1.  Analyze Image 2 to identify ONLY the clothing items (e.g., shirt, pants, dress).
+2.  Completely IGNORE the person, mannequin, or background in Image 2. Your focus is solely on the garments' style, color, and texture.
+3.  EDIT Image 1. Replace the clothes the person is wearing with the garments you identified from Image 2.
+4.  The result must be a photorealistic image of the person from Image 1 wearing the new clothes from Image 2.
 
-**!! CRITICAL CONSTRAINTS !!**
-- ALL clothing items from Image 2 MUST appear in the output image.
-- The output image MUST be significantly different from the input Image 1, showing the person wearing the new outfit.
-- If you identify multiple clothing items in Image 2, ALL of them must be visible on the person in the output.
-- Returning the original person image without ANY clothing changes is INCORRECT. Always perform the clothing swap."""
+**!! IMPORTANT CONSTRAINT !!**
+The output image MUST be different from the input Image 1. Returning the original person image without changing the clothes is an incorrect result. Generate a new image showing the successful clothing swap."""
         
         logger.info("Calling Gemini 2.5 Flash Image model...")
         

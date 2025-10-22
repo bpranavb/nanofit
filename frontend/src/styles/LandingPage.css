@@ -97,26 +97,10 @@
   align-items: center;
 }
 
-.image-placeholder {
+.demo-slider-container {
   width: 100%;
   height: 500px;
-  background: white;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-}
-
-.placeholder-content {
-  text-align: center;
-  color: #b19cd9;
-}
-
-.placeholder-icon {
-  font-size: 5rem;
-  display: block;
-  margin-bottom: 1rem;
+  position: relative;
 }
 
 /* Features Section */

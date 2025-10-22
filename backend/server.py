@@ -125,11 +125,16 @@ The output image MUST be different from the input Image 1. Returning the origina
             response_modalities=["IMAGE"]
         )
         
+        # Create a Content object with all parts (matching TypeScript structure)
+        content = types.Content(
+            parts=[person_part, clothing_part, text_part]
+        )
+        
         # Generate content
         response = await asyncio.to_thread(
             client.models.generate_content,
             model="gemini-2.5-flash-image",
-            contents=[person_part, clothing_part, text_part],
+            contents=content,
             config=config
         )
         

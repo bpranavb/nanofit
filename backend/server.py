@@ -115,13 +115,17 @@ async def create_tryon(request: TryOnRequest):
         # Send message and get response with image
         text, images = await chat.send_message_multimodal_response(msg)
         
-        logger.info(f"Received response from Gemini. Text: {text[:100] if text else 'None'}...")
+        logger.info(f"Received response from Gemini.")
+        logger.info(f"Text response: {text[:200] if text else 'None'}...")
+        logger.info(f"Images response type: {type(images)}")
+        logger.info(f"Images response: {images}")
+        logger.info(f"Number of images: {len(images) if images else 0}")
         
         if not images or len(images) == 0:
-            logger.error("No images returned from Gemini")
+            logger.error(f"No images returned from Gemini. Full text response: {text}")
             raise HTTPException(
                 status_code=500,
-                detail="Failed to generate try-on image. No image was returned from the AI model."
+                detail=f"Failed to generate try-on image. The AI model returned a text description but no image. Response: {text[:200] if text else 'No response'}"
             )
         
         # Get the first generated image

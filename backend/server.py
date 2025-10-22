@@ -99,13 +99,13 @@ async def create_tryon(request: TryOnRequest):
             modalities=["image", "text"]
         )
         
-        logger.info("Sending images to Gemini Nano Banana for try-on...")
+        logger.info("Sending request to Gemini Nano Banana for try-on...")
         
-        # Create the message with both images
-        # The prompt instructs the AI to dress the person from the first image
-        # in the clothing from the second image
+        # First approach: Try to generate image with text describing what we want
+        # Based on the integration playbook, for image GENERATION (not editing),
+        # we should only use text without file_contents
         msg = UserMessage(
-            text="Take the person from the first image and dress them in the clothing item shown in the second image. Make it look realistic, natural, and professionally styled. Ensure the clothing fits naturally on the person's body, maintaining proper proportions and lighting. Generate a high-quality portrait-style image.",
+            text="Generate a photorealistic image of a person wearing specific clothing. Create a high-quality, natural-looking portrait with professional lighting and styling.",
             file_contents=[
                 ImageContent(request.person_image),
                 ImageContent(request.clothing_image)

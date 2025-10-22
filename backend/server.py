@@ -129,8 +129,12 @@ async def create_tryon(request: TryOnRequest):
         
         for part in response.parts:
             if part.inline_data is not None:
-                # The data is already base64 encoded
-                result_image_base64 = part.inline_data.data
+                # The data comes as bytes, need to encode to base64
+                image_data = part.inline_data.data
+                if isinstance(image_data, bytes):
+                    result_image_base64 = base64.b64encode(image_data).decode('utf-8')
+                else:
+                    result_image_base64 = image_data
                 logger.info(f"Found generated image in response. Size: {len(result_image_base64)} characters")
                 break
         

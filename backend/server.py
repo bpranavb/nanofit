@@ -119,7 +119,7 @@ async def create_tryon(request: TryOnRequest):
 The output image MUST be different from the input Image 1. Returning the original person image without changing the clothes is an incorrect result. Generate a new image showing the successful clothing swap."""
         
         # Create text part
-        text_part = types.Part.from_text(text_prompt)
+        text_part = types.Part(text=text_prompt)
         
         logger.info("Calling Gemini 2.5 Flash Image model...")
         

@@ -157,10 +157,11 @@ IMPORTANT: The output MUST be a newly generated image, not Image 1 returned unch
         
         logger.info("Calling Gemini 2.5 Flash Image model...")
         
-        # Configure generation settings - try different quality settings
+        # Configure generation settings
         config = types.GenerateContentConfig(
             response_modalities=["IMAGE"],
-            temperature=0.4,  # Lower temperature for more consistent results
+            temperature=0.7,  # Higher temperature to encourage actual generation vs returning original
+            top_p=0.95,  # Nucleus sampling for better diversity
         )
         
         # Create a Content object with all parts

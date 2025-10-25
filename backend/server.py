@@ -130,38 +130,16 @@ async def create_tryon(request: TryOnRequest):
         
         logger.info("Calling Gemini for virtual try-on...")
         
-        # Try multiple approaches to get better results
-        
-        # Stronger prompt with explicit generation requirement
-        text_prompt = """Virtual try-on task - YOU MUST GENERATE A NEW IMAGE:
-
-Step 1: Analyze Image 1 (the person)
-- Note their face, pose, background
-
-Step 2: Analyze Image 2 (the clothing source)
-- Identify ALL clothing items present (shirt, pants, dress, jacket, skirt, etc.)
-- If someone is wearing/holding the clothes: extract ONLY the clothing details (color, style, pattern)
-- If clothes are displayed alone: extract the clothing details directly
-
-Step 3: Generate a NEW image (CRITICAL - DO NOT return Image 1 unchanged)
-- Show the person from Image 1 wearing the clothing from Image 2
-- Keep: Same face, same pose, same background as Image 1
-- Change: ONLY the clothing items visible in Image 2
-- If Image 2 has only a shirt: change only the shirt
-- If Image 2 has shirt AND pants: change both
-- If Image 2 has a dress: replace the full outfit with the dress
-
-IMPORTANT: The output MUST be a newly generated image, not Image 1 returned unchanged. The clothing MUST be different."""
+        # Simple, direct prompt - no complexity
+        text_prompt = "Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."
         
         optimized_text_part = types.Part(text=text_prompt)
         
         logger.info("Calling Gemini 2.5 Flash Image model...")
         
-        # Configure generation settings
+        # Minimal config - let model use defaults
         config = types.GenerateContentConfig(
-            response_modalities=["IMAGE"],
-            temperature=0.7,  # Higher temperature to encourage actual generation vs returning original
-            top_p=0.95,  # Nucleus sampling for better diversity
+            response_modalities=["IMAGE"]
         )
         
         # Create a Content object with all parts

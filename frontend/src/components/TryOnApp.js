@@ -320,8 +320,11 @@ const TryOnApp = () => {
           <h1 className="app-title">Virtual Try-On</h1>
           <div className="header-actions">
             <button className="header-button" onClick={() => setShowHistory(true)}>
-              📋 History ({history.length})
+              📋 History ({history.length}/20)
             </button>
+            {history.length > 15 && (
+              <span className="storage-warning">⚠️ Near limit</span>
+            )}
             {history.length > 0 && (
               <button className="header-button clear" onClick={handleClearHistory}>
                 🗑️ Clear

@@ -138,15 +138,24 @@ async def create_tryon(request: TryOnRequest):
                 person_part,
                 clothing_part,
                 types.Part(text="""Analyze these two images for a virtual try-on task:
-Image 1: Person photo (the person to keep)
-Image 2: Clothing reference (clothes to extract)
+Image 1: Person photo (the BASE person - MUST be kept exactly as is)
+Image 2: Clothing reference (extract ONLY the clothes, ignore any person/face in this image)
 
-Create a detailed, specific prompt for an AI image generator that will:
-1. Identify specific details about the person in Image 1 (pose, body type, skin tone, background)
-2. Identify the exact clothing items in Image 2 (style, color, pattern, whether held or worn)
-3. Generate clear instructions to keep Image 1's person while changing to Image 2's clothes
+Create a detailed prompt for an AI image generator following this STRICT format:
 
-Your prompt should be direct, specific, and action-oriented. Focus on what to preserve (person, pose, face, background) and what to change (only clothing). Be very explicit about not replacing the person.
+"Generate a photorealistic image showing the EXACT SAME person from Image 1 with these critical requirements:
+
+MUST PRESERVE FROM IMAGE 1 (DO NOT CHANGE):
+- The exact same face (facial features, skin tone, hair, expression)
+- The exact same body shape and pose
+- The exact same background
+
+MUST CHANGE FROM IMAGE 1:
+- Replace their clothing with: [describe the specific clothing items from Image 2 - color, style, pattern, type]
+
+CRITICAL: If there is a person or face in Image 2, COMPLETELY IGNORE them. Extract ONLY the clothing details (style, color, pattern). The output must show Image 1's person (same face, same body) wearing Image 2's clothes."
+
+Be extremely specific about the clothing details from Image 2 but ALWAYS emphasize that Image 1's face and person must remain identical.
 
 Generate ONLY the prompt text, no explanations.""")
             ]

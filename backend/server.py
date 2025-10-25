@@ -130,19 +130,53 @@ async def create_tryon(request: TryOnRequest):
         # Create text part
         text_part = types.Part(text=text_prompt)
         
-        logger.info("Calling Gemini 2.5 Flash Image model...")
+        logger.info("Step 1: Generating optimized prompt by analyzing images...")
+        
+        # Step 1: Use Gemini text model to analyze images and generate optimal prompt
+        prompt_gen_content = types.Content(
+            parts=[
+                person_part,
+                clothing_part,
+                types.Part(text="""Analyze these two images for a virtual try-on task:
+Image 1: Person photo (the person to keep)
+Image 2: Clothing reference (clothes to extract)
+
+Create a detailed, specific prompt for an AI image generator that will:
+1. Identify specific details about the person in Image 1 (pose, body type, skin tone, background)
+2. Identify the exact clothing items in Image 2 (style, color, pattern, whether held or worn)
+3. Generate clear instructions to keep Image 1's person while changing to Image 2's clothes
+
+Your prompt should be direct, specific, and action-oriented. Focus on what to preserve (person, pose, face, background) and what to change (only clothing). Be very explicit about not replacing the person.
+
+Generate ONLY the prompt text, no explanations.""")
+            ]
+        )
+        
+        prompt_response = await asyncio.to_thread(
+            client.models.generate_content,
+            model="gemini-2.0-flash-exp",
+            contents=prompt_gen_content
+        )
+        
+        generated_prompt = prompt_response.text.strip()
+        logger.info(f"Generated optimized prompt: {generated_prompt[:200]}...")
+        
+        logger.info("Step 2: Using optimized prompt for virtual try-on generation...")
+        
+        # Step 2: Use the generated prompt for image generation
+        optimized_text_part = types.Part(text=generated_prompt)
         
         # Configure generation settings
         config = types.GenerateContentConfig(
             response_modalities=["IMAGE"]
         )
         
-        # Create a Content object with all parts (matching TypeScript structure)
+        # Create a Content object with all parts
         content = types.Content(
-            parts=[person_part, clothing_part, text_part]
+            parts=[person_part, clothing_part, optimized_text_part]
         )
         
-        # Generate content
+        # Generate content with optimized prompt
         response = await asyncio.to_thread(
             client.models.generate_content,
             model="gemini-2.5-flash-image",

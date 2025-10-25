@@ -114,9 +114,12 @@ You MUST perform a clothing swap between two images. This is NOT an image descri
 - ONLY their clothing should change
 
 **IMAGE 2 (THE CLOTHING SOURCE):**
-- Extract ONLY the clothing items worn in this image
-- If there is a person/model in Image 2: COMPLETELY IGNORE the person - extract ONLY their clothes (shirt, pants, dress, jacket, etc.)
+- First, check if someone is HOLDING clothing items (dress, shirt, pants in their hands):
+  * If YES: Extract ONLY the clothing items being HELD (not what the person is wearing)
+  * If NO: Extract the clothing items the person is WEARING
+- COMPLETELY IGNORE the person themselves - only extract the clothes
 - Focus on: garment style, color, pattern, texture, design details
+- If multiple clothing items are visible (shirt AND pants), extract ALL of them
 
 **YOUR MANDATORY TASK:**
 1. Identify ALL clothing items in Image 2 (shirt, pants, jacket, dress, etc.)

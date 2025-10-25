@@ -28,7 +28,19 @@ const TryOnApp = () => {
   useEffect(() => {
     const savedHistory = localStorage.getItem('tryonHistory');
     if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+      try {
+        const parsed = JSON.parse(savedHistory);
+        // Keep only last 20 items on load
+        const limited = parsed.slice(0, 20);
+        setHistory(limited);
+        if (limited.length < parsed.length) {
+          localStorage.setItem('tryonHistory', JSON.stringify(limited));
+        }
+      } catch (e) {
+        console.error('Error loading history:', e);
+        localStorage.removeItem('tryonHistory');
+        setHistory([]);
+      }
     }
   }, []);
 

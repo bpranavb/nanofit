@@ -105,55 +105,34 @@ async def create_tryon(request: TryOnRequest):
         )
         
         text_prompt = """
-**CRITICAL VIRTUAL TRY-ON TASK:**
+Perform a virtual clothing try-on task.
 
-You MUST perform a clothing swap between two images. This is NOT an image description task.
+INPUT IMAGES:
+• Image 1: A person (this is the BASE person to keep)
+• Image 2: Clothing reference (may show person wearing/holding clothes, or just clothes)
 
-**IMAGE 1 (THE PERSON TO KEEP):**
-- This person's face, body, pose, and background MUST remain EXACTLY the same in the output
-- ONLY their clothing should change
+TASK:
+1. From Image 1: Keep the person's face, body shape, skin tone, pose, and background EXACTLY as they are
+2. From Image 2: Identify the clothing items only (shirt, pants, dress, jacket, etc.)
+   - If someone is holding clothes: use the held clothes
+   - If someone is wearing clothes: use those clothes  
+   - Extract the garment details: style, color, pattern, fit
+3. Generate a new image: Same person from Image 1, now dressed in the clothes from Image 2
 
-**IMAGE 2 (THE CLOTHING SOURCE):**
-- First, check if someone is HOLDING clothing items (dress, shirt, pants in their hands):
-  * If YES: Extract ONLY the clothing items being HELD (not what the person is wearing)
-  * If NO: Extract the clothing items the person is WEARING
-- COMPLETELY IGNORE the person themselves - only extract the clothes
-- Focus on: garment style, color, pattern, texture, design details
-- If multiple clothing items are visible (shirt AND pants), extract ALL of them
+REQUIREMENTS:
+• Preserve: Face, body, pose, background from Image 1
+• Change: Only the clothing (from Image 1's clothes to Image 2's clothes)
+• Fit: Make Image 2's clothes fit naturally on Image 1's person
+• Complete: If Image 2 has shirt AND pants, include both
+• Realistic: Photorealistic result with proper lighting and proportions
 
-**YOUR MANDATORY TASK:**
-1. Carefully examine Image 2:
-   - Is someone HOLDING clothes? → Use the HELD clothes
-   - Is someone WEARING clothes (not holding)? → Use the WORN clothes
-   - Are clothes displayed without a person? → Use those clothes
-2. Identify ALL clothing items from Image 2 (shirt, pants, jacket, dress, etc.)
-3. Remove ALL clothes from the person in Image 1
-4. Dress the person from Image 1 in ALL the clothes you identified from Image 2
-5. The person from Image 1 should now be wearing ALL garments from Image 2
-6. Maintain the person's original pose, face, body, and background from Image 1
+DO NOT:
+• Replace Image 1's person with Image 2's person
+• Return either image unchanged
+• Mix body parts from both people
+• Only change partial clothing
 
-**CRITICAL REQUIREMENTS:**
-- The OUTPUT must show Image 1's person wearing Image 2's clothes
-- The OUTPUT must be VISIBLY DIFFERENT from Image 1 (clothes MUST change)
-- If Image 2 has multiple clothing items (shirt AND pants), ALL must appear in the output
-- The clothing from Image 2 must FIT naturally on the person from Image 1
-- Preserve Image 1's lighting, pose, and background
-
-**EXAMPLES:**
-- If Image 2 shows staff holding a blue dress: Extract the BLUE DRESS (not staff's clothes)
-- If Image 2 shows a model wearing a suit: Extract the SUIT
-- If Image 2 shows staff holding jacket + pants: Extract BOTH jacket AND pants
-- If Image 2 shows person wearing shirt + pants: Extract BOTH shirt AND pants
-
-**FAILURE CONDITIONS (DO NOT DO THESE):**
-❌ Returning Image 1 unchanged
-❌ Returning Image 2 unchanged  
-❌ Mixing the people from both images
-❌ Only changing some clothes but not all
-❌ Using staff's clothing when they're holding different clothes
-❌ Describing the images instead of generating a new one
-
-✅ CORRECT OUTPUT: Image 1's person wearing ALL of Image 2's clothes (held OR worn), photorealistic and natural-looking."""
+OUTPUT: Image 1's person (same face, same body, same pose) wearing Image 2's clothing."""
         
         # Create text part
         text_part = types.Part(text=text_prompt)

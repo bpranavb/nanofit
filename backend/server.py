@@ -132,29 +132,19 @@ async def create_tryon(request: TryOnRequest):
         
         logger.info("Calling Gemini for virtual try-on...")
         
-        # Use a clear, specific prompt
-        optimized_text_part = types.Part(text="""Perform a virtual clothing try-on task:
-
-IMAGE 1 (Keep Everything Except Clothes):
-- Keep: The person's exact face, exact pose/stance, exact body position, exact background
-- Change: ONLY the clothing items
-
-IMAGE 2 (Extract ALL Clothing):
-- Identify ALL clothing items: shirt, pants, jacket, dress, etc.
-- If someone is wearing these clothes: ignore the person completely, extract only the clothing details
-- Extract: Style, color, pattern, fit of ALL garments
-
-TASK:
-Generate a photorealistic image showing the same person from Image 1 (same face, same exact pose/stance, same body position, same background) now wearing ALL the clothing items from Image 2.
-
-CRITICAL:
-- The person must maintain their EXACT POSE from Image 1 (not Image 2's pose)
-- ALL clothing items from Image 2 must be included (shirt AND pants AND any other items)
-- Only clothing changes, everything else stays exactly as in Image 1""")
+        # Try multiple approaches to get better results
         
-        # Configure generation settings
+        # Approach 1: Very simple and direct
+        text_prompt = "Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."
+        
+        optimized_text_part = types.Part(text=text_prompt)
+        
+        logger.info("Calling Gemini 2.5 Flash Image model...")
+        
+        # Configure generation settings - try different quality settings
         config = types.GenerateContentConfig(
-            response_modalities=["IMAGE"]
+            response_modalities=["IMAGE"],
+            temperature=0.4,  # Lower temperature for more consistent results
         )
         
         # Create a Content object with all parts
@@ -162,7 +152,7 @@ CRITICAL:
             parts=[person_part, clothing_part, optimized_text_part]
         )
         
-        # Generate content with optimized prompt
+        # Generate content
         response = await asyncio.to_thread(
             client.models.generate_content,
             model="gemini-2.5-flash-image",

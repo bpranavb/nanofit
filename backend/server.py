@@ -125,10 +125,8 @@ async def create_tryon(request: TryOnRequest):
             mime_type=clothing_mime
         )
         
-        text_prompt = """Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."""
-        
-        # Create text part
-        text_part = types.Part(text=text_prompt)
+        # Original text prompt (kept for reference)
+        # text_prompt = """Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."""
         
         logger.info("Calling Gemini for virtual try-on...")
         

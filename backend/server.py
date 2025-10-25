@@ -132,8 +132,26 @@ async def create_tryon(request: TryOnRequest):
         
         # Try multiple approaches to get better results
         
-        # Updated prompt to handle both worn and unworn clothing
-        text_prompt = "Your task is to perform a virtual try-on. The first image contains a person. The second image contains clothing items that may be worn by someone, held by someone, or displayed alone. Identify ALL the garments (shirt, pants, jacket, dress, etc.) in the second image. If there is a person or mannequin wearing or holding the clothes, completely ignore them and focus only on the clothing details. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background from the first image should be maintained exactly."
+        # Stronger prompt with explicit generation requirement
+        text_prompt = """Virtual try-on task - YOU MUST GENERATE A NEW IMAGE:
+
+Step 1: Analyze Image 1 (the person)
+- Note their face, pose, background
+
+Step 2: Analyze Image 2 (the clothing source)
+- Identify ALL clothing items present (shirt, pants, dress, jacket, skirt, etc.)
+- If someone is wearing/holding the clothes: extract ONLY the clothing details (color, style, pattern)
+- If clothes are displayed alone: extract the clothing details directly
+
+Step 3: Generate a NEW image (CRITICAL - DO NOT return Image 1 unchanged)
+- Show the person from Image 1 wearing the clothing from Image 2
+- Keep: Same face, same pose, same background as Image 1
+- Change: ONLY the clothing items visible in Image 2
+- If Image 2 has only a shirt: change only the shirt
+- If Image 2 has shirt AND pants: change both
+- If Image 2 has a dress: replace the full outfit with the dress
+
+IMPORTANT: The output MUST be a newly generated image, not Image 1 returned unchanged. The clothing MUST be different."""
         
         optimized_text_part = types.Part(text=text_prompt)
         

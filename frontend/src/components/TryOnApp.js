@@ -16,9 +16,34 @@ const TryOnApp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraType, setCameraType] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
   
   const personInputRef = useRef(null);
   const clothingInputRef = useRef(null);
+
+  // Load history from localStorage on mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('tryonHistory');
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  // Save history to localStorage
+  const saveToHistory = (personImg, clothingImg, resultImg) => {
+    const newItem = {
+      personImage: personImg,
+      clothingImage: clothingImg,
+      resultImage: resultImg,
+      timestamp: new Date().toISOString()
+    };
+    const updatedHistory = [newItem, ...history];
+    setHistory(updatedHistory);
+    localStorage.setItem('tryonHistory', JSON.stringify(updatedHistory));
+  };
 
   // Convert file to base64
   const fileToBase64 = (file) => {

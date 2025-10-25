@@ -139,14 +139,21 @@ You MUST perform a clothing swap between two images. This is NOT an image descri
 - The clothing from Image 2 must FIT naturally on the person from Image 1
 - Preserve Image 1's lighting, pose, and background
 
+**EXAMPLES:**
+- If Image 2 shows staff holding a blue dress: Extract the BLUE DRESS (not staff's clothes)
+- If Image 2 shows a model wearing a suit: Extract the SUIT
+- If Image 2 shows staff holding jacket + pants: Extract BOTH jacket AND pants
+- If Image 2 shows person wearing shirt + pants: Extract BOTH shirt AND pants
+
 **FAILURE CONDITIONS (DO NOT DO THESE):**
 ❌ Returning Image 1 unchanged
 ❌ Returning Image 2 unchanged  
 ❌ Mixing the people from both images
 ❌ Only changing some clothes but not all
+❌ Using staff's clothing when they're holding different clothes
 ❌ Describing the images instead of generating a new one
 
-✅ CORRECT OUTPUT: Image 1's person wearing ALL of Image 2's clothes, photorealistic and natural-looking."""
+✅ CORRECT OUTPUT: Image 1's person wearing ALL of Image 2's clothes (held OR worn), photorealistic and natural-looking."""
         
         # Create text part
         text_part = types.Part(text=text_prompt)

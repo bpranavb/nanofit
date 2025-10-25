@@ -130,8 +130,34 @@ async def create_tryon(request: TryOnRequest):
         
         logger.info("Calling Gemini for virtual try-on...")
         
-        # Simple, direct prompt - no complexity
-        text_prompt = "Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."
+        # Detailed, structured prompt for high-fidelity virtual try-on
+        text_prompt = """**Primary Directive: High-Fidelity Virtual Try-On**
+
+You are an expert digital tailor. Your task is to execute a precise clothing swap. You will be given two images.
+
+**Input Definitions:**
+- **Image 1 (The Canvas):** Contains the person, their pose, and the background. This is the base image that will be edited.
+- **Image 2 (The Source):** Contains the garment(s). This is the ONLY source for the new clothing's appearance.
+
+**--- CRITICAL RULES ---**
+
+1.  **PRESERVE THE CANVAS:** The person in Image 1 (including their face, skin tone, hair, and pose) and the entire background MUST be preserved with absolute, photorealistic accuracy. DO NOT change them.
+
+2.  **EXTRACT FROM THE SOURCE:** You must analyze Image 2 to extract the garment's key attributes:
+    - **Exact Color:** The precise hue, saturation, and brightness.
+    - **Complete Pattern & Design:** The full visual design, embroidery, or print.
+    - **Fabric Texture:** The material's look and feel (e.g., cotton, silk, denim).
+
+3.  **DISCARD ORIGINAL CLOTHING:** You MUST completely ignore and discard all visual information from the clothes the person is wearing in Image 1. Their original clothing's color, pattern, and texture are IRRELEVANT and must NOT influence the output.
+
+**--- STEP-BY-STEP EXECUTION ---**
+
+1.  **Isolate:** Identify and isolate the primary garment(s) in Image 2. Ignore any mannequin, hanger, or person.
+2.  **Map:** Identify the area of clothing on the person in Image 1.
+3.  **Replace and Render:** Generate a new image where you flawlessly render the extracted garment attributes (Exact Color, Design, Texture) from Image 2 onto the mapped clothing area of Image 1. The new clothing must fit the person's body and pose naturally, including realistic folds and shadows.
+
+**!! FINAL MANDATE !!**
+The output image's clothing must be a perfect visual match to the garment in Image 2. There should be zero color blending from the original clothing. The resulting image must be photorealistic and seamlessly edited."""
         
         optimized_text_part = types.Part(text=text_prompt)
         

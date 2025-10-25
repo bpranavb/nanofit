@@ -437,6 +437,23 @@ const TryOnApp = () => {
                 className="result-image"
               />
             </div>
+            
+            {/* Share Options */}
+            <div className="share-section">
+              <h4 className="share-title">Share Your Result</h4>
+              <div className="share-buttons">
+                <button className="share-button download" onClick={handleDownload}>
+                  ⬇️ Download
+                </button>
+                <button className="share-button email" onClick={handleEmailShare}>
+                  ✉️ Email
+                </button>
+                <button className="share-button qr" onClick={handleQRShare}>
+                  📱 QR Code
+                </button>
+              </div>
+            </div>
+
             <div className="action-section" style={{ marginTop: '2rem' }}>
               <button 
                 className="generate-button"

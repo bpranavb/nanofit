@@ -93,15 +93,36 @@ async def create_tryon(request: TryOnRequest):
         person_image_bytes = base64.b64decode(request.person_image)
         clothing_image_bytes = base64.b64decode(request.clothing_image)
         
-        # Create Part objects for images
+        # Detect actual mime type from image bytes
+        def detect_mime_type(image_bytes):
+            # Check magic bytes to determine image type
+            if image_bytes.startswith(b'\xff\xd8\xff'):
+                return "image/jpeg"
+            elif image_bytes.startswith(b'\x89PNG'):
+                return "image/png"
+            elif image_bytes.startswith(b'RIFF') and image_bytes[8:12] == b'WEBP':
+                return "image/webp"
+            elif image_bytes.startswith(b'GIF87a') or image_bytes.startswith(b'GIF89a'):
+                return "image/gif"
+            else:
+                # Default to jpeg if unknown
+                return "image/jpeg"
+        
+        person_mime = detect_mime_type(person_image_bytes)
+        clothing_mime = detect_mime_type(clothing_image_bytes)
+        
+        logger.info(f"Person image mime type: {person_mime}")
+        logger.info(f"Clothing image mime type: {clothing_mime}")
+        
+        # Create Part objects for images with correct mime types
         person_part = types.Part.from_bytes(
             data=person_image_bytes,
-            mime_type="image/jpeg"
+            mime_type=person_mime
         )
         
         clothing_part = types.Part.from_bytes(
             data=clothing_image_bytes,
-            mime_type="image/jpeg"
+            mime_type=clothing_mime
         )
         
         text_prompt = """

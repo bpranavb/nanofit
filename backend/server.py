@@ -125,26 +125,7 @@ async def create_tryon(request: TryOnRequest):
             mime_type=clothing_mime
         )
         
-        text_prompt = """
-**Objective:** Perform a virtual try-on. You will be given two images.
-- **Image 1 (The Person):** This is the base image. The person, their pose, and the background MUST be preserved.
-- **Image 2 (The Clothing):** This image contains the target clothing.
-
-**Your Task (Follow these steps precisely):**
-1. Analyze Image 2 to identify the clothing items:
-   - If someone is HOLDING clothes (in their hands): Use ONLY the held clothing items
-   - If someone is WEARING clothes (not holding): Use the worn clothing items
-   - Identify ALL items: shirt, pants, dress, jacket, etc.
-2. Completely IGNORE the person, mannequin, or background in Image 2. Your focus is solely on the garments' style, color, and texture.
-3. EDIT Image 1. Replace the clothes the person is wearing with the garments you identified from Image 2.
-4. The result must be a photorealistic image showing the SAME person from Image 1 (same face, same body, same pose, same background) now wearing the new clothes from Image 2.
-
-**!! IMPORTANT CONSTRAINTS !!**
-- The output image MUST be DIFFERENT from Image 1 (the clothes MUST change)
-- DO NOT replace the person - keep Image 1's person, only change their clothing
-- DO NOT return Image 1 unchanged
-- If Image 2 has multiple items (shirt AND pants), change ALL of them
-- Generate a NEW image showing the successful clothing swap"""
+        text_prompt = """Your task is to perform a virtual try-on. The first image contains a person. The second image contains one or more clothing items. Identify the garments (e.g., shirt, pants, jacket) in the second image, ignoring any person or mannequin wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. The person's original pose, face, and the background should be maintained."""
         
         # Create text part
         text_part = types.Part(text=text_prompt)

@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import CameraCapture from './CameraCapture';
+import HistoryPanel from './HistoryPanel';
 import '../styles/TryOnApp.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

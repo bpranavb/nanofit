@@ -105,18 +105,41 @@ async def create_tryon(request: TryOnRequest):
         )
         
         text_prompt = """
-**Objective:** Perform a virtual try-on. You will be given two images.
-- **Image 1 (The Person):** This is the base image. The person, their pose, and the background MUST be preserved.
-- **Image 2 (The Clothing):** This image contains the target clothing.
+**CRITICAL VIRTUAL TRY-ON TASK:**
 
-**Your Task (Follow these steps precisely):**
-1.  Analyze Image 2 to identify ONLY the clothing items (e.g., shirt, pants, dress).
-2.  Completely IGNORE the person, mannequin, or background in Image 2. Your focus is solely on the garments' style, color, and texture.
-3.  EDIT Image 1. Replace the clothes the person is wearing with the garments you identified from Image 2.
-4.  The result must be a photorealistic image of the person from Image 1 wearing the new clothes from Image 2.
+You MUST perform a clothing swap between two images. This is NOT an image description task.
 
-**!! IMPORTANT CONSTRAINT !!**
-The output image MUST be different from the input Image 1. Returning the original person image without changing the clothes is an incorrect result. Generate a new image showing the successful clothing swap."""
+**IMAGE 1 (THE PERSON TO KEEP):**
+- This person's face, body, pose, and background MUST remain EXACTLY the same in the output
+- ONLY their clothing should change
+
+**IMAGE 2 (THE CLOTHING SOURCE):**
+- Extract ONLY the clothing items worn in this image
+- If there is a person/model in Image 2: COMPLETELY IGNORE the person - extract ONLY their clothes (shirt, pants, dress, jacket, etc.)
+- Focus on: garment style, color, pattern, texture, design details
+
+**YOUR MANDATORY TASK:**
+1. Identify ALL clothing items in Image 2 (shirt, pants, jacket, dress, etc.)
+2. Remove ALL clothes from the person in Image 1
+3. Dress the person from Image 1 in ALL the clothes from Image 2
+4. The person from Image 1 should now be wearing ALL garments from Image 2
+5. Maintain the person's original pose, face, body, and background from Image 1
+
+**CRITICAL REQUIREMENTS:**
+- The OUTPUT must show Image 1's person wearing Image 2's clothes
+- The OUTPUT must be VISIBLY DIFFERENT from Image 1 (clothes MUST change)
+- If Image 2 has multiple clothing items (shirt AND pants), ALL must appear in the output
+- The clothing from Image 2 must FIT naturally on the person from Image 1
+- Preserve Image 1's lighting, pose, and background
+
+**FAILURE CONDITIONS (DO NOT DO THESE):**
+❌ Returning Image 1 unchanged
+❌ Returning Image 2 unchanged  
+❌ Mixing the people from both images
+❌ Only changing some clothes but not all
+❌ Describing the images instead of generating a new one
+
+✅ CORRECT OUTPUT: Image 1's person wearing ALL of Image 2's clothes, photorealistic and natural-looking."""
         
         # Create text part
         text_part = types.Part(text=text_prompt)

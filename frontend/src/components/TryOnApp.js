@@ -32,7 +32,7 @@ const TryOnApp = () => {
     }
   }, []);
 
-  // Save history to localStorage
+  // Save history to localStorage with size limit
   const saveToHistory = (personImg, clothingImg, resultImg) => {
     const newItem = {
       personImage: personImg,
@@ -40,9 +40,31 @@ const TryOnApp = () => {
       resultImage: resultImg,
       timestamp: new Date().toISOString()
     };
-    const updatedHistory = [newItem, ...history];
-    setHistory(updatedHistory);
-    localStorage.setItem('tryonHistory', JSON.stringify(updatedHistory));
+    
+    // Keep only last 20 items to prevent localStorage overflow
+    const updatedHistory = [newItem, ...history].slice(0, 20);
+    
+    try {
+      setHistory(updatedHistory);
+      localStorage.setItem('tryonHistory', JSON.stringify(updatedHistory));
+    } catch (e) {
+      if (e.name === 'QuotaExceededError') {
+        console.log('Storage quota exceeded, clearing old history...');
+        // Keep only last 10 items if we hit quota
+        const reducedHistory = [newItem, ...history].slice(0, 10);
+        setHistory(reducedHistory);
+        try {
+          localStorage.setItem('tryonHistory', JSON.stringify(reducedHistory));
+        } catch (err) {
+          // If still failing, just keep current session
+          console.error('Unable to save history:', err);
+          setHistory([newItem]);
+          localStorage.setItem('tryonHistory', JSON.stringify([newItem]));
+        }
+      } else {
+        console.error('Error saving history:', e);
+      }
+    }
   };
 
   // Convert file to base64

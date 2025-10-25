@@ -175,8 +175,12 @@ const TryOnApp = () => {
 
       if (response.data && response.data.result_image) {
         // The result_image is already base64, just add the data URL prefix for display
-        setResultImage(`data:image/png;base64,${response.data.result_image}`);
+        const resultImageUrl = `data:image/png;base64,${response.data.result_image}`;
+        setResultImage(resultImageUrl);
         setLoadingMessage('Complete!');
+        
+        // Save to history
+        saveToHistory(personImage.preview, clothingImage.preview, resultImageUrl);
       } else {
         throw new Error('No image returned from server');
       }

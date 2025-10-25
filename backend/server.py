@@ -130,10 +130,13 @@ async def create_tryon(request: TryOnRequest):
         
         logger.info("Calling Gemini for virtual try-on...")
         
-        # Detailed, structured prompt for high-fidelity virtual try-on
+        # Enhanced prompt with strongest identity preservation
         text_prompt = """**Primary Directive: High-Fidelity Virtual Try-On**
 
-You are an expert digital tailor. Your task is to execute a precise clothing swap. You will be given two images.
+You are an expert digital tailor. Your task is to execute a precise clothing swap.
+
+**!!! CORE SAFETY DIRECTIVE: PROTECT IDENTITY !!!**
+**This is the most important rule. The person's face and head in Image 1 are a STRICT NO-EDIT ZONE. They must be transferred to the final image perfectly, pixel for pixel, without ANY modification. Any change to the facial features, expression, skin tone, or hair is a complete failure of the task.**
 
 **Input Definitions:**
 - **Image 1 (The Canvas):** Contains the person, their pose, and the background. This is the base image that will be edited.
@@ -141,7 +144,7 @@ You are an expert digital tailor. Your task is to execute a precise clothing swa
 
 **--- CRITICAL RULES ---**
 
-1.  **PRESERVE THE CANVAS:** The person in Image 1 (including their face, skin tone, hair, and pose) and the entire background MUST be preserved with absolute, photorealistic accuracy. DO NOT change them.
+1.  **PRESERVE THE CANVAS:** As stated in the Core Safety Directive, the person's identity is paramount. In addition, the original **pose** and the entire **background** MUST be preserved with photorealistic accuracy. Do not change them.
 
 2.  **EXTRACT FROM THE SOURCE:** You must analyze Image 2 to extract the garment's key attributes:
     - **Exact Color:** The precise hue, saturation, and brightness.
@@ -153,11 +156,11 @@ You are an expert digital tailor. Your task is to execute a precise clothing swa
 **--- STEP-BY-STEP EXECUTION ---**
 
 1.  **Isolate:** Identify and isolate the primary garment(s) in Image 2. Ignore any mannequin, hanger, or person.
-2.  **Map:** Identify the area of clothing on the person in Image 1.
+2.  **Map:** Identify the area of clothing on the person in Image 1, carefully excluding the head, neck, and hands.
 3.  **Replace and Render:** Generate a new image where you flawlessly render the extracted garment attributes (Exact Color, Design, Texture) from Image 2 onto the mapped clothing area of Image 1. The new clothing must fit the person's body and pose naturally, including realistic folds and shadows.
 
 **!! FINAL MANDATE !!**
-The output image's clothing must be a perfect visual match to the garment in Image 2. There should be zero color blending from the original clothing. The resulting image must be photorealistic and seamlessly edited."""
+The output image's clothing must be a perfect visual match to the garment in Image 2. The person's face and identity must be 100% identical to Image 1. There should be zero color blending from the original clothing. The resulting image must be photorealistic and seamlessly edited."""
         
         optimized_text_part = types.Part(text=text_prompt)
         

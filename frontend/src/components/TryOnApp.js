@@ -206,6 +206,57 @@ const TryOnApp = () => {
     setLoadingMessage('');
   };
 
+  // Clear history
+  const handleClearHistory = () => {
+    if (window.confirm('Are you sure you want to clear all history?')) {
+      setHistory([]);
+      localStorage.removeItem('tryonHistory');
+    }
+  };
+
+  // Download result
+  const handleDownload = () => {
+    if (!resultImage) return;
+    
+    const link = document.createElement('a');
+    link.href = resultImage;
+    link.download = `virtual-tryon-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Share via email
+  const handleEmailShare = () => {
+    if (!resultImage) return;
+    
+    const subject = encodeURIComponent('Check out my Virtual Try-On!');
+    const body = encodeURIComponent('I tried on clothes virtually! Check out the result.');
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
+  // Generate QR code for sharing
+  const handleQRShare = () => {
+    if (!resultImage) return;
+    
+    // For now, show a simple alert. In production, you'd use a QR code library
+    alert('QR Code sharing: This would generate a QR code linking to your result. (Feature coming soon!)');
+  };
+
+  // Load from history
+  const handleHistorySelect = (item) => {
+    // Convert data URLs back to the format we need
+    setPersonImage({ 
+      base64: item.personImage.split(',')[1], 
+      preview: item.personImage 
+    });
+    setClothingImage({ 
+      base64: item.clothingImage.split(',')[1], 
+      preview: item.clothingImage 
+    });
+    setResultImage(item.resultImage);
+  };
+
   return (
     <div className="tryon-app">
       {/* Header */}

@@ -59,6 +59,21 @@ const TryOnApp = () => {
     });
   };
 
+  // Handle camera capture
+  const openCamera = (type) => {
+    setCameraType(type);
+    setShowCamera(true);
+  };
+
+  const handleCameraCapture = (base64, previewUrl) => {
+    if (cameraType === 'person') {
+      setPersonImage({ base64, preview: previewUrl });
+    } else {
+      setClothingImage({ base64, preview: previewUrl });
+    }
+    setError(null);
+  };
+
   // Handle image upload
   const handleImageUpload = async (e, type) => {
     const file = e.target.files[0];

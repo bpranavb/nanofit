@@ -380,6 +380,20 @@ const TryOnApp = () => {
               onChange={(e) => handleImageUpload(e, 'clothing')}
               style={{ display: 'none' }}
             />
+            <div className="upload-actions">
+              <button 
+                className="upload-action-button camera"
+                onClick={(e) => { e.stopPropagation(); openCamera('clothing'); }}
+              >
+                📷 Take Photo
+              </button>
+              <button 
+                className="upload-action-button gallery"
+                onClick={() => clothingInputRef.current?.click()}
+              >
+                🖼️ From Gallery
+              </button>
+            </div>
           </div>
         </div>
 

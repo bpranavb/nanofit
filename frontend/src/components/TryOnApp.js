@@ -121,7 +121,7 @@ const TryOnApp = () => {
     try {
       console.log('Sending try-on request to:', `${API}/tryon`);
       
-      setLoadingMessage('Sending to AI model...');
+      setLoadingMessage('Creating your virtual try-on...');
       
       const response = await axios.post(`${API}/tryon`, {
         person_image: personImage.base64,
@@ -129,7 +129,7 @@ const TryOnApp = () => {
       });
 
       console.log('Try-on response received:', response.data);
-      setLoadingMessage('Generating your virtual try-on...');
+      setLoadingMessage('Finalizing your new look...');
 
       if (response.data && response.data.result_image) {
         // The result_image is already base64, just add the data URL prefix for display
@@ -149,6 +149,15 @@ const TryOnApp = () => {
       setLoading(false);
       setLoadingMessage('');
     }
+  };
+
+  // Start over function
+  const handleStartOver = () => {
+    setPersonImage(null);
+    setClothingImage(null);
+    setResultImage(null);
+    setError(null);
+    setLoadingMessage('');
   };
 
   return (
@@ -186,8 +195,8 @@ const TryOnApp = () => {
               ) : (
                 <div className="upload-placeholder">
                   <span className="upload-icon">📸</span>
-                  <p className="upload-text">Click, drag, or paste your photo</p>
-                  <p className="upload-hint">JPG, PNG (Max 10MB)</p>
+                  <p className="upload-text">Tap to upload your photo</p>
+                  <p className="upload-hint">or drag and drop</p>
                 </div>
               )}
             </div>
@@ -220,8 +229,8 @@ const TryOnApp = () => {
               ) : (
                 <div className="upload-placeholder">
                   <span className="upload-icon">👗</span>
-                  <p className="upload-text">Click, drag, or paste clothing photo</p>
-                  <p className="upload-hint">JPG, PNG (Max 10MB)</p>
+                  <p className="upload-text">Tap to upload clothing</p>
+                  <p className="upload-hint">or drag and drop</p>
                 </div>
               )}
             </div>
@@ -235,7 +244,7 @@ const TryOnApp = () => {
           </div>
         </div>
 
-        {/* Generate Button */}
+        {/* Action Section */}
         <div className="action-section">
           <button 
             className="generate-button"
@@ -274,6 +283,15 @@ const TryOnApp = () => {
                 alt="Try-on result" 
                 className="result-image"
               />
+            </div>
+            <div className="action-section" style={{ marginTop: '2rem' }}>
+              <button 
+                className="generate-button"
+                onClick={handleStartOver}
+                style={{ background: 'linear-gradient(135deg, #b19cd9 0%, #dda0dd 100%)' }}
+              >
+                Start Over
+              </button>
             </div>
           </div>
         )}

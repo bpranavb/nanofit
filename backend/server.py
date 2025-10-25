@@ -132,8 +132,25 @@ async def create_tryon(request: TryOnRequest):
         
         logger.info("Calling Gemini for virtual try-on...")
         
-        # Use a simple, direct prompt that works
-        optimized_text_part = types.Part(text="Your task is to perform a virtual try-on. The first image contains a person. The second image contains clothing items. Identify the garments in the second image, completely ignoring any person or face shown wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. Keep the person's face, body, pose, and background from the first image exactly the same. Only change the clothing.")
+        # Use a clear, specific prompt
+        optimized_text_part = types.Part(text="""Perform a virtual clothing try-on task:
+
+IMAGE 1 (Keep Everything Except Clothes):
+- Keep: The person's exact face, exact pose/stance, exact body position, exact background
+- Change: ONLY the clothing items
+
+IMAGE 2 (Extract ALL Clothing):
+- Identify ALL clothing items: shirt, pants, jacket, dress, etc.
+- If someone is wearing these clothes: ignore the person completely, extract only the clothing details
+- Extract: Style, color, pattern, fit of ALL garments
+
+TASK:
+Generate a photorealistic image showing the same person from Image 1 (same face, same exact pose/stance, same body position, same background) now wearing ALL the clothing items from Image 2.
+
+CRITICAL:
+- The person must maintain their EXACT POSE from Image 1 (not Image 2's pose)
+- ALL clothing items from Image 2 must be included (shirt AND pants AND any other items)
+- Only clothing changes, everything else stays exactly as in Image 1""")
         
         # Configure generation settings
         config = types.GenerateContentConfig(

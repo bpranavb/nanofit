@@ -122,11 +122,15 @@ You MUST perform a clothing swap between two images. This is NOT an image descri
 - If multiple clothing items are visible (shirt AND pants), extract ALL of them
 
 **YOUR MANDATORY TASK:**
-1. Identify ALL clothing items in Image 2 (shirt, pants, jacket, dress, etc.)
-2. Remove ALL clothes from the person in Image 1
-3. Dress the person from Image 1 in ALL the clothes from Image 2
-4. The person from Image 1 should now be wearing ALL garments from Image 2
-5. Maintain the person's original pose, face, body, and background from Image 1
+1. Carefully examine Image 2:
+   - Is someone HOLDING clothes? → Use the HELD clothes
+   - Is someone WEARING clothes (not holding)? → Use the WORN clothes
+   - Are clothes displayed without a person? → Use those clothes
+2. Identify ALL clothing items from Image 2 (shirt, pants, jacket, dress, etc.)
+3. Remove ALL clothes from the person in Image 1
+4. Dress the person from Image 1 in ALL the clothes you identified from Image 2
+5. The person from Image 1 should now be wearing ALL garments from Image 2
+6. Maintain the person's original pose, face, body, and background from Image 1
 
 **CRITICAL REQUIREMENTS:**
 - The OUTPUT must show Image 1's person wearing Image 2's clothes

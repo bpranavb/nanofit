@@ -259,6 +259,24 @@ const TryOnApp = () => {
 
   return (
     <div className="tryon-app">
+      {/* Camera Modal */}
+      {showCamera && (
+        <CameraCapture
+          onCapture={handleCameraCapture}
+          onClose={() => setShowCamera(false)}
+          type={cameraType}
+        />
+      )}
+
+      {/* History Panel */}
+      {showHistory && (
+        <HistoryPanel
+          history={history}
+          onClose={() => setShowHistory(false)}
+          onSelect={handleHistorySelect}
+        />
+      )}
+
       {/* Header */}
       <header className="app-header">
         <div className="header-content">
@@ -266,6 +284,16 @@ const TryOnApp = () => {
             ← Back
           </button>
           <h1 className="app-title">Virtual Try-On</h1>
+          <div className="header-actions">
+            <button className="header-button" onClick={() => setShowHistory(true)}>
+              📋 History ({history.length})
+            </button>
+            {history.length > 0 && (
+              <button className="header-button clear" onClick={handleClearHistory}>
+                🗑️ Clear
+              </button>
+            )}
+          </div>
         </div>
       </header>
 

@@ -130,50 +130,10 @@ async def create_tryon(request: TryOnRequest):
         # Create text part
         text_part = types.Part(text=text_prompt)
         
-        logger.info("Step 1: Generating optimized prompt by analyzing images...")
+        logger.info("Calling Gemini for virtual try-on...")
         
-        # Step 1: Use Gemini text model to analyze images and generate optimal prompt
-        prompt_gen_content = types.Content(
-            parts=[
-                person_part,
-                clothing_part,
-                types.Part(text="""Analyze these two images for a virtual try-on task:
-Image 1: Person photo (the BASE person - MUST be kept exactly as is)
-Image 2: Clothing reference (extract ONLY the clothes, ignore any person/face in this image)
-
-Create a detailed prompt for an AI image generator following this STRICT format:
-
-"Generate a photorealistic image showing the EXACT SAME person from Image 1 with these critical requirements:
-
-MUST PRESERVE FROM IMAGE 1 (DO NOT CHANGE):
-- The exact same face (facial features, skin tone, hair, expression)
-- The exact same body shape and pose
-- The exact same background
-
-MUST CHANGE FROM IMAGE 1:
-- Replace their clothing with: [describe the specific clothing items from Image 2 - color, style, pattern, type]
-
-CRITICAL: If there is a person or face in Image 2, COMPLETELY IGNORE them. Extract ONLY the clothing details (style, color, pattern). The output must show Image 1's person (same face, same body) wearing Image 2's clothes."
-
-Be extremely specific about the clothing details from Image 2 but ALWAYS emphasize that Image 1's face and person must remain identical.
-
-Generate ONLY the prompt text, no explanations.""")
-            ]
-        )
-        
-        prompt_response = await asyncio.to_thread(
-            client.models.generate_content,
-            model="gemini-2.0-flash-exp",
-            contents=prompt_gen_content
-        )
-        
-        generated_prompt = prompt_response.text.strip()
-        logger.info(f"Generated optimized prompt: {generated_prompt[:200]}...")
-        
-        logger.info("Step 2: Using optimized prompt for virtual try-on generation...")
-        
-        # Step 2: Use the generated prompt for image generation
-        optimized_text_part = types.Part(text=generated_prompt)
+        # Use a simple, direct prompt that works
+        optimized_text_part = types.Part(text="Your task is to perform a virtual try-on. The first image contains a person. The second image contains clothing items. Identify the garments in the second image, completely ignoring any person or face shown wearing them. Then, generate a new, photorealistic image where the person from the first image is wearing those garments. Keep the person's face, body, pose, and background from the first image exactly the same. Only change the clothing.")
         
         # Configure generation settings
         config = types.GenerateContentConfig(

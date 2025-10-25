@@ -164,6 +164,49 @@
   object-fit: contain;
 }
 
+.upload-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.upload-action-button {
+  flex: 1;
+  padding: 1.2rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.upload-action-button.camera {
+  background: linear-gradient(135deg, #dda0dd 0%, #b19cd9 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(221, 160, 221, 0.3);
+}
+
+.upload-action-button.camera:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(221, 160, 221, 0.4);
+}
+
+.upload-action-button.gallery {
+  background: white;
+  color: #b19cd9;
+  border: 3px solid #dda0dd;
+}
+
+.upload-action-button.gallery:hover {
+  background: #f5f5f5;
+  transform: translateY(-2px);
+}
+
 /* Action Section */
 .action-section {
   text-align: center;

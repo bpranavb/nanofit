@@ -125,6 +125,36 @@ const FeedbackViewer = ({ onClose }) => {
               </div>
             )}
 
+            {/* Daily Statistics */}
+            {dailyStats.length > 0 && (
+              <div className="daily-stats-section">
+                <h3>Daily Feedback Count</h3>
+                <div className="date-filter">
+                  <select 
+                    value={selectedDate} 
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="date-select"
+                  >
+                    <option value="all">All Dates</option>
+                    {dailyStats.map((stat) => (
+                      <option key={stat.date} value={stat.date}>
+                        {stat.date} ({stat.count} feedback)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="daily-stats-grid">
+                  {dailyStats.slice(0, 7).map((stat) => (
+                    <div key={stat.date} className="daily-stat-card">
+                      <div className="daily-date">{stat.date}</div>
+                      <div className="daily-count">{stat.count}</div>
+                      <div className="daily-label">feedback</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Feedback List */}
             <div className="feedback-list">
               {feedback.map((item, index) => (

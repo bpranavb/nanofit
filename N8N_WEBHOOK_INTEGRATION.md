@@ -108,8 +108,8 @@ ERROR - HTTP error sending to n8n webhook: Server error '500 Internal Server Err
 ## Configuration
 
 ### Environment Variables
-No additional environment variables required. Webhook URL is hardcoded in:
-- `backend/server.py` - Line 63
+No additional environment variables required. Webhook URL is configured in:
+- `backend/server.py` - Line 63: `N8N_WEBHOOK_URL = "https://spantra.app.n8n.cloud/webhook-test/upload"`
 
 To change webhook URL, update:
 ```python

@@ -403,6 +403,33 @@
   box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
 }
 
+/* Feedback Prompt */
+.feedback-prompt {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.feedback-button {
+  padding: 1.2rem 3rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feedback-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(156, 39, 176, 0.4);
+}
+
 /* Tablet Landscape Optimization (768px - 1366px) */
 @media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
   .app-container {

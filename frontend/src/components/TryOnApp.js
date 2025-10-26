@@ -23,6 +23,7 @@ const TryOnApp = () => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showFeedbackViewer, setShowFeedbackViewer] = useState(false);
   const [currentTryonId, setCurrentTryonId] = useState(null);
   
   const personInputRef = useRef(null);

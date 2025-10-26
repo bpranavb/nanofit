@@ -22,6 +22,7 @@ const FeedbackViewer = ({ onClose }) => {
       setLoading(true);
       const response = await axios.get(`${API}/feedback/all`);
       setFeedback(response.data.feedback);
+      setDailyStats(response.data.daily_stats || []);
       
       // Calculate statistics
       if (response.data.feedback.length > 0) {

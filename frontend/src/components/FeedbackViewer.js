@@ -157,13 +157,18 @@ const FeedbackViewer = ({ onClose }) => {
 
             {/* Feedback List */}
             <div className="feedback-list">
-              {feedback.map((item, index) => (
+              {feedback
+                .filter(item => selectedDate === 'all' || item.feedback_date === selectedDate)
+                .map((item, index) => (
                 <div key={index} className="feedback-item">
+                  <div className="feedback-serial">
+                    #{item.serial_number || 'N/A'}
+                  </div>
                   <div className="feedback-header-row">
                     <div className="feedback-info">
                       {renderStars(item.rating)}
                       <span className="feedback-date">
-                        {formatDate(item.feedback_timestamp || item.timestamp)}
+                        📅 {formatDate(item.feedback_timestamp || item.timestamp)}
                       </span>
                     </div>
                     {item.customer_name && (

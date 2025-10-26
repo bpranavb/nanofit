@@ -56,6 +56,37 @@ class FeedbackRequest(BaseModel):
     comment: Optional[str] = None
     customer_name: Optional[str] = None
 
+
+# N8N Webhook Configuration
+N8N_WEBHOOK_URL = "https://spantra.app.n8n.cloud/webhook/upload"
+
+async def send_to_n8n_webhook(person_image_base64: str, clothing_image_base64: str, result_image_base64: str, tryon_id: str):
+    """
+    Send try-on images to n8n webhook
+    This function fails silently to not interrupt the try-on process
+    """
+    try:
+        logger.info(f"Sending try-on data to n8n webhook for tryon_id: {tryon_id}")
+        
+        payload = {
+            "tryon_id": tryon_id,
+            "timestamp": datetime.utcnow().isoformat(),
+            "person_image": person_image_base64,
+            "clothing_image": clothing_image_base64,
+            "result_image": result_image_base64
+        }
+        
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(N8N_WEBHOOK_URL, json=payload)
+            response.raise_for_status()
+            logger.info(f"Successfully sent data to n8n webhook. Status: {response.status_code}")
+            
+    except httpx.HTTPError as e:
+        logger.error(f"HTTP error sending to n8n webhook: {str(e)}")
+    except Exception as e:
+        logger.error(f"Unexpected error sending to n8n webhook: {str(e)}")
+
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():

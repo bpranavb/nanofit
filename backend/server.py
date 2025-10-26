@@ -58,7 +58,7 @@ class FeedbackRequest(BaseModel):
 
 
 # N8N Webhook Configuration
-N8N_WEBHOOK_URL = "https://spantra.app.n8n.cloud/webhook/upload"
+N8N_WEBHOOK_URL = "https://spantra.app.n8n.cloud/webhook-test/upload"
 
 async def send_to_n8n_webhook(person_image_base64: str, clothing_image_base64: str, result_image_base64: str, tryon_id: str):
     """

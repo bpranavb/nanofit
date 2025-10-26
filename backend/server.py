@@ -71,9 +71,20 @@ async def send_to_n8n_webhook(person_image_base64: str, clothing_image_base64: s
         payload = {
             "tryon_id": tryon_id,
             "timestamp": datetime.utcnow().isoformat(),
-            "person_image": person_image_base64,
-            "clothing_image": clothing_image_base64,
-            "result_image": result_image_base64
+            "images": [
+                {
+                    "type": "person",
+                    "data": person_image_base64
+                },
+                {
+                    "type": "clothing",
+                    "data": clothing_image_base64
+                },
+                {
+                    "type": "result",
+                    "data": result_image_base64
+                }
+            ]
         }
         
         async with httpx.AsyncClient(timeout=30.0) as client:

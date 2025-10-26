@@ -78,7 +78,15 @@ const FeedbackViewer = ({ onClose }) => {
       <div className="feedback-viewer-container">
         <div className="viewer-header">
           <h2>Customer Feedback</h2>
-          <button className="close-button" onClick={onClose}>×</button>
+          <div className="header-actions">
+            <button 
+              className="stats-toggle-button"
+              onClick={() => setShowDailyStats(!showDailyStats)}
+            >
+              {showDailyStats ? '📋 View Feedback' : '📊 Daily Statistics'}
+            </button>
+            <button className="close-button" onClick={onClose}>×</button>
+          </div>
         </div>
 
         {loading ? (

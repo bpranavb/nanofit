@@ -269,6 +269,46 @@ async def get_tryon(tryon_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@api_router.post("/feedback")
+async def submit_feedback(feedback: FeedbackRequest):
+    """
+    Submit customer feedback for a try-on result
+    """
+    try:
+        # Verify try-on exists
+        tryon = await db.tryons.find_one({"id": feedback.tryon_id})
+        if not tryon:
+            raise HTTPException(status_code=404, detail="Try-on not found")
+        
+        # Update try-on with feedback
+        await db.tryons.update_one(
+            {"id": feedback.tryon_id},
+            {
+                "$set": {
+                    "feedback": {
+                        "rating": feedback.rating,
+                        "comment": feedback.comment,
+                        "customer_name": feedback.customer_name,
+                        "feedback_timestamp": datetime.utcnow()
+                    }
+                }
+            }
+        )
+        
+        logger.info(f"Feedback saved for try-on {feedback.tryon_id}: {feedback.rating} stars")
+        
+        return {
+            "success": True,
+            "message": "Feedback submitted successfully"
+        }
+        
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        logger.error(f"Error saving feedback: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Include the router in the main app
 app.include_router(api_router)
 

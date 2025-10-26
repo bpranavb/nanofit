@@ -97,7 +97,8 @@ const FeedbackViewer = ({ onClose }) => {
           <div className="empty-state">
             <p>No feedback received yet.</p>
           </div>
-        ) : (
+        ) : showDailyStats ? (
+          /* Daily Statistics View */
           <>
             {/* Statistics Section */}
             {stats && (
@@ -136,69 +137,92 @@ const FeedbackViewer = ({ onClose }) => {
 
             {/* Daily Statistics */}
             {dailyStats.length > 0 && (
-              <div className="daily-stats-section">
+              <div className="daily-stats-section-full">
                 <h3>Daily Feedback Count</h3>
-                <div className="date-filter">
-                  <select 
-                    value={selectedDate} 
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="date-select"
-                  >
-                    <option value="all">All Dates</option>
-                    {dailyStats.map((stat) => (
-                      <option key={stat.date} value={stat.date}>
-                        {stat.date} ({stat.count} feedback)
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="daily-stats-grid">
-                  {dailyStats.slice(0, 7).map((stat) => (
-                    <div key={stat.date} className="daily-stat-card">
-                      <div className="daily-date">{stat.date}</div>
-                      <div className="daily-count">{stat.count}</div>
-                      <div className="daily-label">feedback</div>
+                <div className="daily-stats-grid-large">
+                  {dailyStats.map((stat) => (
+                    <div key={stat.date} className="daily-stat-card-large">
+                      <div className="daily-date-large">{stat.date}</div>
+                      <div className="daily-count-large">{stat.count}</div>
+                      <div className="daily-label">feedback received</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
+          </>
+        ) : (
+          /* Feedback List View */
+          <>
+            {/* Quick Stats Summary */}
+            <div className="quick-stats">
+              <span className="quick-stat">Total: {stats?.total || 0}</span>
+              <span className="quick-stat">Average: {stats?.average || 0}★</span>
+              <div className="date-filter-inline">
+                <label>Filter by date:</label>
+                <select 
+                  value={selectedDate} 
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="date-select-inline"
+                >
+                  <option value="all">All Dates</option>
+                  {dailyStats.map((stat) => (
+                    <option key={stat.date} value={stat.date}>
+                      {stat.date} ({stat.count})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
             {/* Feedback List */}
             <div className="feedback-list">
               {feedback
                 .filter(item => selectedDate === 'all' || item.feedback_date === selectedDate)
                 .map((item, index) => (
-                <div key={index} className="feedback-item">
-                  <div className="feedback-serial">
+                <div key={index} className="feedback-item-card">
+                  <div className="feedback-serial-badge">
                     #{item.serial_number || 'N/A'}
                   </div>
-                  <div className="feedback-header-row">
-                    <div className="feedback-info">
-                      {renderStars(item.rating)}
-                      <span className="feedback-date">
-                        📅 {formatDate(item.feedback_timestamp || item.timestamp)}
-                      </span>
-                    </div>
-                    {item.customer_name && (
-                      <div className="customer-name">👤 {item.customer_name}</div>
-                    )}
-                  </div>
                   
-                  {item.comment && (
-                    <div className="feedback-comment">
-                      "{item.comment}"
-                    </div>
-                  )}
-                  
+                  {/* Image First - Most Prominent */}
                   {item.result_image && (
-                    <div className="feedback-image">
+                    <div className="feedback-image-main">
                       <img 
                         src={`data:image/png;base64,${item.result_image}`} 
                         alt="Try-on result" 
                       />
                     </div>
                   )}
+                  
+                  {/* Customer Info and Rating */}
+                  <div className="feedback-details">
+                    <div className="feedback-customer-header">
+                      <div className="customer-name-large">
+                        👤 {item.customer_name || 'Anonymous Customer'}
+                      </div>
+                      <div className="feedback-timestamp">
+                        🕐 {formatDate(item.feedback_timestamp || item.timestamp)}
+                      </div>
+                    </div>
+                    
+                    <div className="feedback-rating-section">
+                      {renderStars(item.rating)}
+                      <span className="rating-text">
+                        {item.rating === 5 && 'Excellent'}
+                        {item.rating === 4 && 'Very Good'}
+                        {item.rating === 3 && 'Good'}
+                        {item.rating === 2 && 'Fair'}
+                        {item.rating === 1 && 'Poor'}
+                      </span>
+                    </div>
+                    
+                    {item.comment && (
+                      <div className="feedback-comment-box">
+                        💬 "{item.comment}"
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

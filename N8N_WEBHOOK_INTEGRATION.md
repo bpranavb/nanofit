@@ -27,9 +27,20 @@ This async function sends the try-on data to the n8n webhook.
 {
   "tryon_id": "uuid-string",
   "timestamp": "2025-10-26T22:19:00.123456",
-  "person_image": "base64-string",
-  "clothing_image": "base64-string",
-  "result_image": "base64-string"
+  "images": [
+    {
+      "type": "person",
+      "data": "base64-string"
+    },
+    {
+      "type": "clothing",
+      "data": "base64-string"
+    },
+    {
+      "type": "result",
+      "data": "base64-string"
+    }
+  ]
 }
 ```
 

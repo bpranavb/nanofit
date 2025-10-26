@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CameraCapture from './CameraCapture';
 import HistoryPanel from './HistoryPanel';
 import FeedbackForm from './FeedbackForm';
+import FeedbackViewer from './FeedbackViewer';
 import '../styles/TryOnApp.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

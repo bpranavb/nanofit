@@ -13,6 +13,7 @@ import asyncio
 import base64
 from google import genai
 from google.genai import types
+import httpx
 
 
 ROOT_DIR = Path(__file__).parent

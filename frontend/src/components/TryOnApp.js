@@ -215,6 +215,7 @@ const TryOnApp = () => {
         const resultImageUrl = `data:image/png;base64,${response.data.result_image}`;
         setResultImage(resultImageUrl);
         setLoadingMessage('Complete!');
+        setCurrentTryonId(response.data.id);
         
         // Save to history
         saveToHistory(personImage.preview, clothingImage.preview, resultImageUrl);

@@ -12,6 +12,7 @@ const FeedbackViewer = ({ onClose }) => {
   const [stats, setStats] = useState(null);
   const [dailyStats, setDailyStats] = useState([]);
   const [selectedDate, setSelectedDate] = useState('all');
+  const [showDailyStats, setShowDailyStats] = useState(false);
 
   useEffect(() => {
     loadFeedback();

@@ -495,6 +495,23 @@ const TryOnApp = () => {
               </div>
             </div>
 
+            {/* Feedback Section */}
+            {!showFeedback ? (
+              <div className="feedback-prompt">
+                <button 
+                  className="feedback-button"
+                  onClick={() => setShowFeedback(true)}
+                >
+                  💬 Share Your Feedback
+                </button>
+              </div>
+            ) : (
+              <FeedbackForm 
+                tryonId={currentTryonId}
+                onClose={() => setShowFeedback(false)}
+              />
+            )}
+
             <div className="action-section" style={{ marginTop: '2rem' }}>
               <button 
                 className="generate-button"

@@ -49,8 +49,8 @@ const LandingPage = () => {
         <div className="hero-image">
           <div className="demo-slider-container">
             <BeforeAfterSlider
-              beforeImage="https://images.unsplash.com/photo-1760692558250-09303b4df7fe?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHw0fHxjYXN1YWwlMjBvdXRmaXR8ZW58MHx8fHwxNzYxMTM0NTc5fDA&ixlib=rb-4.1.0&q=85"
-              afterImage="https://images.unsplash.com/photo-1628009658182-6df033109021?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHwzfHxmb3JtYWwlMjBvdXRmaXR8ZW58MHx8fHwxNzYxMTM0NTg1fDA&ixlib=rb-4.1.0&q=85"
+              beforeImage="/demo/before.png"
+              afterImage="/demo/after.png"
               alt="Virtual Try-On Demo"
             />
           </div>

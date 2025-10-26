@@ -317,6 +317,13 @@ const TryOnApp = () => {
         />
       )}
 
+      {/* Feedback Viewer */}
+      {showFeedbackViewer && (
+        <FeedbackViewer
+          onClose={() => setShowFeedbackViewer(false)}
+        />
+      )}
+
       {/* Header */}
       <header className="app-header">
         <div className="header-content">

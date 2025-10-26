@@ -49,6 +49,12 @@ class TryOnResponse(BaseModel):
     timestamp: datetime
     status: str
 
+class FeedbackRequest(BaseModel):
+    tryon_id: str
+    rating: int  # 1-5 stars
+    comment: Optional[str] = None
+    customer_name: Optional[str] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():

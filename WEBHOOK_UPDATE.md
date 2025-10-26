@@ -39,9 +39,20 @@ With payload:
 {
   "tryon_id": "uuid",
   "timestamp": "ISO timestamp",
-  "person_image": "base64 string",
-  "clothing_image": "base64 string",
-  "result_image": "base64 string"
+  "images": [
+    {
+      "type": "person",
+      "data": "base64-string"
+    },
+    {
+      "type": "clothing",
+      "data": "base64-string"
+    },
+    {
+      "type": "result",
+      "data": "base64-string"
+    }
+  ]
 }
 ```
 

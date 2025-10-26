@@ -165,3 +165,5 @@ agent_communication:
       message: "N8N webhook integration testing COMPLETED successfully. All backend functionality verified: API endpoints working, webhook called correctly with proper payload structure, error handling implemented. The n8n external endpoint returned 500 error during testing, but our implementation is correct - this is an external service issue. Integration is ready for production use."
     - agent: "main"
       message: "Updated webhook URL to https://spantra.app.n8n.cloud/webhook-test/upload per user request for troubleshooting. Backend restarted successfully with new URL."
+    - agent: "main"
+      message: "Changed webhook payload structure to use array format. Now sends images as an array of 3 objects with 'type' and 'data' fields: images[{type: 'person', data: 'base64'}, {type: 'clothing', data: 'base64'}, {type: 'result', data: 'base64'}]. Backend restarted successfully."

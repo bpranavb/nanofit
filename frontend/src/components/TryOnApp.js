@@ -21,6 +21,8 @@ const TryOnApp = () => {
   const [cameraType, setCameraType] = useState(null);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [currentTryonId, setCurrentTryonId] = useState(null);
   
   const personInputRef = useRef(null);
   const clothingInputRef = useRef(null);

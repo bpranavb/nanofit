@@ -320,7 +320,7 @@ async def submit_feedback(feedback: FeedbackRequest):
 @api_router.get("/feedback/all")
 async def get_all_feedback():
     """
-    Get all feedback from try-ons
+    Get all feedback from try-ons with enhanced tracking
     """
     try:
         # Find all try-ons that have feedback
@@ -329,26 +329,43 @@ async def get_all_feedback():
         ).to_list(1000)
         
         feedback_list = []
-        for tryon in tryons_with_feedback:
-            feedback_list.append({
-                "tryon_id": tryon.get("id"),
-                "timestamp": tryon.get("timestamp"),
-                "rating": tryon.get("feedback", {}).get("rating"),
-                "comment": tryon.get("feedback", {}).get("comment"),
-                "customer_name": tryon.get("feedback", {}).get("customer_name"),
-                "feedback_timestamp": tryon.get("feedback", {}).get("feedback_timestamp"),
-                "result_image": tryon.get("result_image")  # Include image for reference
-            })
+        daily_counts = {}
         
-        # Sort by feedback timestamp, most recent first
+        for tryon in tryons_with_feedback:
+            feedback_data = tryon.get("feedback", {})
+            feedback_item = {
+                "tryon_id": tryon.get("id"),
+                "serial_number": feedback_data.get("serial_number"),
+                "timestamp": tryon.get("timestamp"),
+                "rating": feedback_data.get("rating"),
+                "comment": feedback_data.get("comment"),
+                "customer_name": feedback_data.get("customer_name"),
+                "feedback_timestamp": feedback_data.get("feedback_timestamp"),
+                "feedback_date": feedback_data.get("feedback_date"),
+                "result_image": tryon.get("result_image")
+            }
+            feedback_list.append(feedback_item)
+            
+            # Count feedback per day
+            date = feedback_data.get("feedback_date", "Unknown")
+            daily_counts[date] = daily_counts.get(date, 0) + 1
+        
+        # Sort by serial number (descending - most recent first)
         feedback_list.sort(
-            key=lambda x: x.get("feedback_timestamp") or x.get("timestamp"),
+            key=lambda x: x.get("serial_number") or 0,
             reverse=True
         )
         
+        # Calculate daily statistics
+        daily_stats = [
+            {"date": date, "count": count}
+            for date, count in sorted(daily_counts.items(), reverse=True)
+        ]
+        
         return {
             "total": len(feedback_list),
-            "feedback": feedback_list
+            "feedback": feedback_list,
+            "daily_stats": daily_stats
         }
         
     except Exception as e:

@@ -309,6 +309,45 @@ async def submit_feedback(feedback: FeedbackRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@api_router.get("/feedback/all")
+async def get_all_feedback():
+    """
+    Get all feedback from try-ons
+    """
+    try:
+        # Find all try-ons that have feedback
+        tryons_with_feedback = await db.tryons.find(
+            {"feedback": {"$exists": True}}
+        ).to_list(1000)
+        
+        feedback_list = []
+        for tryon in tryons_with_feedback:
+            feedback_list.append({
+                "tryon_id": tryon.get("id"),
+                "timestamp": tryon.get("timestamp"),
+                "rating": tryon.get("feedback", {}).get("rating"),
+                "comment": tryon.get("feedback", {}).get("comment"),
+                "customer_name": tryon.get("feedback", {}).get("customer_name"),
+                "feedback_timestamp": tryon.get("feedback", {}).get("feedback_timestamp"),
+                "result_image": tryon.get("result_image")  # Include image for reference
+            })
+        
+        # Sort by feedback timestamp, most recent first
+        feedback_list.sort(
+            key=lambda x: x.get("feedback_timestamp") or x.get("timestamp"),
+            reverse=True
+        )
+        
+        return {
+            "total": len(feedback_list),
+            "feedback": feedback_list
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching feedback: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Include the router in the main app
 app.include_router(api_router)
 

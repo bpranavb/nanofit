@@ -332,6 +332,9 @@ const TryOnApp = () => {
           </button>
           <h1 className="app-title">Virtual Try-On</h1>
           <div className="header-actions">
+            <button className="header-button" onClick={() => setShowFeedbackViewer(true)}>
+              ⭐ Feedback
+            </button>
             <button className="header-button" onClick={() => setShowHistory(true)}>
               📋 History ({history.length}/20)
             </button>

@@ -141,6 +141,70 @@
   text-align: right;
 }
 
+/* Daily Statistics Section */
+.daily-stats-section {
+  padding: 2rem 3rem;
+  background: white;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.daily-stats-section h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2d2d2d;
+  margin-bottom: 1rem;
+}
+
+.date-filter {
+  margin-bottom: 1.5rem;
+}
+
+.date-select {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  min-width: 250px;
+}
+
+.date-select:focus {
+  outline: none;
+  border-color: #b19cd9;
+}
+
+.daily-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.daily-stat-card {
+  background: linear-gradient(135deg, #dda0dd 0%, #b19cd9 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.daily-date {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.daily-count {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.daily-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-top: 0.25rem;
+}
+
 /* Feedback List */
 .feedback-list {
   flex: 1;
@@ -155,6 +219,20 @@
   margin-bottom: 1.5rem;
   border: 2px solid transparent;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.feedback-serial {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: linear-gradient(135deg, #dda0dd 0%, #b19cd9 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 10px rgba(177, 156, 217, 0.3);
 }
 
 .feedback-item:hover {

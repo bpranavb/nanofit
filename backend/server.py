@@ -280,26 +280,34 @@ async def submit_feedback(feedback: FeedbackRequest):
         if not tryon:
             raise HTTPException(status_code=404, detail="Try-on not found")
         
+        # Get the next serial number for feedback
+        # Count all existing feedback to generate serial number
+        feedback_count = await db.tryons.count_documents({"feedback": {"$exists": True}})
+        serial_number = feedback_count + 1
+        
         # Update try-on with feedback
         await db.tryons.update_one(
             {"id": feedback.tryon_id},
             {
                 "$set": {
                     "feedback": {
+                        "serial_number": serial_number,
                         "rating": feedback.rating,
                         "comment": feedback.comment,
                         "customer_name": feedback.customer_name,
-                        "feedback_timestamp": datetime.utcnow()
+                        "feedback_timestamp": datetime.utcnow(),
+                        "feedback_date": datetime.utcnow().strftime("%Y-%m-%d")  # For daily tracking
                     }
                 }
             }
         )
         
-        logger.info(f"Feedback saved for try-on {feedback.tryon_id}: {feedback.rating} stars")
+        logger.info(f"Feedback #{serial_number} saved for try-on {feedback.tryon_id}: {feedback.rating} stars")
         
         return {
             "success": True,
-            "message": "Feedback submitted successfully"
+            "message": "Feedback submitted successfully",
+            "serial_number": serial_number
         }
         
     except HTTPException as he:

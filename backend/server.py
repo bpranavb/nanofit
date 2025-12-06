@@ -128,6 +128,78 @@ async def get_status_checks():
     return [StatusCheck(**status_check) for status_check in status_checks]
 
 
+@api_router.post("/upload/person", response_model=ImageUploadResponse)
+async def upload_person_image(request: ImageUploadRequest):
+    """
+    Upload person image and get an upload ID for later use
+    """
+    try:
+        logger.info("Uploading person image...")
+        
+        upload_id = str(uuid.uuid4())
+        
+        # Store the uploaded image in MongoDB
+        upload_record = {
+            "upload_id": upload_id,
+            "image_type": "person",
+            "image_data": request.image,
+            "timestamp": datetime.utcnow(),
+            "status": "uploaded"
+        }
+        
+        await db.uploads.insert_one(upload_record)
+        logger.info(f"Person image uploaded with ID: {upload_id}")
+        
+        return ImageUploadResponse(
+            upload_id=upload_id,
+            timestamp=upload_record["timestamp"],
+            status="uploaded"
+        )
+        
+    except Exception as e:
+        logger.error(f"Error uploading person image: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to upload person image: {str(e)}"
+        )
+
+
+@api_router.post("/upload/clothing", response_model=ImageUploadResponse)
+async def upload_clothing_image(request: ImageUploadRequest):
+    """
+    Upload clothing image and get an upload ID for later use
+    """
+    try:
+        logger.info("Uploading clothing image...")
+        
+        upload_id = str(uuid.uuid4())
+        
+        # Store the uploaded image in MongoDB
+        upload_record = {
+            "upload_id": upload_id,
+            "image_type": "clothing",
+            "image_data": request.image,
+            "timestamp": datetime.utcnow(),
+            "status": "uploaded"
+        }
+        
+        await db.uploads.insert_one(upload_record)
+        logger.info(f"Clothing image uploaded with ID: {upload_id}")
+        
+        return ImageUploadResponse(
+            upload_id=upload_id,
+            timestamp=upload_record["timestamp"],
+            status="uploaded"
+        )
+        
+    except Exception as e:
+        logger.error(f"Error uploading clothing image: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to upload clothing image: {str(e)}"
+        )
+
+
 @api_router.post("/tryon", response_model=TryOnResponse)
 async def create_tryon(request: TryOnRequest):
     """

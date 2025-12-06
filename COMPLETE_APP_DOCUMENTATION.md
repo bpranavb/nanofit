@@ -361,7 +361,7 @@ content = types.Content(
 
 ### Webhook URL
 ```
-https://spantra.app.n8n.cloud/webhook-test/upload
+https://spantra.app.n8n.cloud/webhook/upload
 ```
 
 ### Payload Structure (Array Format)

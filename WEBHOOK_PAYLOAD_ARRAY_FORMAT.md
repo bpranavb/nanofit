@@ -142,7 +142,7 @@ INFO - Successfully sent data to n8n webhook. Status: 200
 ```
 
 ### 2. Verify in N8N
-- Go to your n8n workflow
+- Go to your n8n workflow at: https://spantra.app.n8n.cloud/webhook/upload
 - Check the incoming webhook data
 - Confirm `images` array contains 3 objects
 - Each object should have `type` and `data` fields

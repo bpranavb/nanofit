@@ -126,11 +126,26 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: true
           agent: "main"
           comment: "Existing functionality. Uses Gemini 2.5 Flash Image model for virtual try-on."
+        - working: true
+          agent: "main"
+          comment: "Added new upload API endpoints: POST /api/upload/person and POST /api/upload/clothing. Modified /api/tryon to support both direct images (backward compatible) and upload IDs. New flow: 1) Upload images separately to get upload_id, 2) Call /api/tryon with upload IDs. Old flow still works. Needs testing."
+
+  - task: "Image Upload API Endpoints"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created POST /api/upload/person and POST /api/upload/clothing endpoints. Accept base64 image in request body, store in MongoDB 'uploads' collection, return upload_id. These IDs can be used in /api/tryon instead of direct images."
 
 frontend:
   - task: "Virtual Try-On App Interface"

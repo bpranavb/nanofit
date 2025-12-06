@@ -386,8 +386,8 @@ The output image's clothing must be a perfect visual match to the garment in Ima
         # Save to database
         tryon_record = {
             "id": tryon_id,
-            "person_image": request.person_image,
-            "clothing_image": request.clothing_image,
+            "person_image": person_image_base64,
+            "clothing_image": clothing_image_base64,
             "result_image": result_image_base64,
             "timestamp": datetime.utcnow(),
             "status": "completed"
@@ -399,8 +399,8 @@ The output image's clothing must be a perfect visual match to the garment in Ima
         # Send data to n8n webhook (non-blocking, fails silently)
         asyncio.create_task(
             send_to_n8n_webhook(
-                person_image_base64=request.person_image,
-                clothing_image_base64=request.clothing_image,
+                person_image_base64=person_image_base64,
+                clothing_image_base64=clothing_image_base64,
                 result_image_base64=result_image_base64,
                 tryon_id=tryon_id
             )

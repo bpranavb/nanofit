@@ -264,8 +264,8 @@ async def create_tryon(request: TryOnRequest):
         logger.info("Preparing images for Gemini...")
         
         # Decode base64 to create Part objects with inline data
-        person_image_bytes = base64.b64decode(request.person_image)
-        clothing_image_bytes = base64.b64decode(request.clothing_image)
+        person_image_bytes = base64.b64decode(person_image_base64)
+        clothing_image_bytes = base64.b64decode(clothing_image_base64)
         
         # Detect actual mime type from image bytes
         def detect_mime_type(image_bytes):

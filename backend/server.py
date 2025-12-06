@@ -56,6 +56,18 @@ class FeedbackRequest(BaseModel):
     comment: Optional[str] = None
     customer_name: Optional[str] = None
 
+class ImageUploadRequest(BaseModel):
+    image: str  # base64 encoded image
+
+class ImageUploadResponse(BaseModel):
+    upload_id: str
+    timestamp: datetime
+    status: str
+
+class TryOnWithIdsRequest(BaseModel):
+    person_upload_id: str
+    clothing_upload_id: str
+
 
 # N8N Webhook Configuration
 N8N_WEBHOOK_URL = "https://spantra.app.n8n.cloud/webhook/upload"

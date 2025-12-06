@@ -41,8 +41,10 @@ class StatusCheckCreate(BaseModel):
     client_name: str
 
 class TryOnRequest(BaseModel):
-    person_image: str  # base64 encoded image
-    clothing_image: str  # base64 encoded image
+    person_image: Optional[str] = None  # base64 encoded image (for backward compatibility)
+    clothing_image: Optional[str] = None  # base64 encoded image (for backward compatibility)
+    person_upload_id: Optional[str] = None  # upload ID from /api/upload/person
+    clothing_upload_id: Optional[str] = None  # upload ID from /api/upload/clothing
 
 class TryOnResponse(BaseModel):
     id: str

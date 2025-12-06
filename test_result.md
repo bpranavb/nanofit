@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Virtual try-on application for clothes. Now needs to send image data to n8n webhook (https://spantra.app.n8n.cloud/webhook-test/upload) when Generate Try-On is clicked."
+user_problem_statement: "Virtual try-on application for clothes. Now needs to send image data to n8n webhook (https://spantra.app.n8n.cloud/webhook/upload) when Generate Try-On is clicked."
 
 backend:
   - task: "N8N Webhook Integration"

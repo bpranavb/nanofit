@@ -9,7 +9,7 @@ The virtual try-on application now automatically sends image data to an n8n webh
 **File:** `backend/server.py`
 
 #### Webhook Configuration
-- **URL:** `https://spantra.app.n8n.cloud/webhook-test/upload`
+- **URL:** `https://spantra.app.n8n.cloud/webhook/upload`
 - **Method:** POST
 - **Content-Type:** application/json
 

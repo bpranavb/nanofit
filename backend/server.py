@@ -207,6 +207,10 @@ async def create_tryon(request: TryOnRequest):
     """
     Virtual try-on endpoint that uses Gemini Nano Banana to generate
     an image of the person wearing the clothing from the second image.
+    
+    Supports two modes:
+    1. Direct images: Pass person_image and clothing_image as base64
+    2. Upload IDs: Pass person_upload_id and clothing_upload_id from previous uploads
     """
     try:
         logger.info("Starting virtual try-on process...")
@@ -218,6 +222,41 @@ async def create_tryon(request: TryOnRequest):
             raise HTTPException(status_code=500, detail="Gemini API key not configured")
         
         tryon_id = str(uuid.uuid4())
+        
+        # Determine if using direct images or upload IDs
+        person_image_base64 = None
+        clothing_image_base64 = None
+        
+        if request.person_upload_id and request.clothing_upload_id:
+            # Mode 1: Using upload IDs
+            logger.info("Using upload IDs mode")
+            
+            # Fetch person image from uploads collection
+            person_upload = await db.uploads.find_one({"upload_id": request.person_upload_id})
+            if not person_upload:
+                raise HTTPException(status_code=404, detail=f"Person upload ID not found: {request.person_upload_id}")
+            
+            # Fetch clothing image from uploads collection
+            clothing_upload = await db.uploads.find_one({"upload_id": request.clothing_upload_id})
+            if not clothing_upload:
+                raise HTTPException(status_code=404, detail=f"Clothing upload ID not found: {request.clothing_upload_id}")
+            
+            person_image_base64 = person_upload["image_data"]
+            clothing_image_base64 = clothing_upload["image_data"]
+            
+            logger.info(f"Retrieved images from uploads: person={request.person_upload_id}, clothing={request.clothing_upload_id}")
+            
+        elif request.person_image and request.clothing_image:
+            # Mode 2: Direct images (backward compatibility)
+            logger.info("Using direct images mode")
+            person_image_base64 = request.person_image
+            clothing_image_base64 = request.clothing_image
+            
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Must provide either (person_image + clothing_image) OR (person_upload_id + clothing_upload_id)"
+            )
         
         # Create Gemini client
         client = genai.Client(api_key=gemini_api_key)

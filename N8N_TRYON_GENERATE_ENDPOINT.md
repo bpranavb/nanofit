@@ -8,7 +8,7 @@
 
 **Full URL:**
 ```
-https://virtual-tryon-55.preview.emergentagent.com/api/tryon
+https://stylegen-9.preview.emergentagent.com/api/tryon
 ```
 
 **Method:** `POST`
@@ -76,7 +76,7 @@ Content-Type: application/json
 
 1. **Method:** `POST`
 
-2. **URL:** `https://virtual-tryon-55.preview.emergentagent.com/api/tryon`
+2. **URL:** `https://stylegen-9.preview.emergentagent.com/api/tryon`
 
 3. **Authentication:** None
 
@@ -123,17 +123,17 @@ HTTP POST to /api/tryon
 ## Complete N8N Workflow Example
 
 ### Node 1: Upload Person Image
-- **URL:** `https://virtual-tryon-55.preview.emergentagent.com/api/upload/person`
+- **URL:** `https://stylegen-9.preview.emergentagent.com/api/upload/person`
 - **Method:** POST
 - **Body:** `{"image": "{{ $json.person_image_base64 }}"}`
 
 ### Node 2: Upload Clothing Image
-- **URL:** `https://virtual-tryon-55.preview.emergentagent.com/api/upload/clothing`
+- **URL:** `https://stylegen-9.preview.emergentagent.com/api/upload/clothing`
 - **Method:** POST
 - **Body:** `{"image": "{{ $json.clothing_image_base64 }}"}`
 
 ### Node 3: Generate Try-On
-- **URL:** `https://virtual-tryon-55.preview.emergentagent.com/api/tryon`
+- **URL:** `https://stylegen-9.preview.emergentagent.com/api/tryon`
 - **Method:** POST
 - **Body:**
   ```json
@@ -172,7 +172,7 @@ return {
 
 ```bash
 # Step 1: Upload person image
-PERSON_RESPONSE=$(curl -s -X POST https://virtual-tryon-55.preview.emergentagent.com/api/upload/person \
+PERSON_RESPONSE=$(curl -s -X POST https://stylegen-9.preview.emergentagent.com/api/upload/person \
   -H "Content-Type: application/json" \
   -d '{
     "image": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
@@ -182,7 +182,7 @@ PERSON_UPLOAD_ID=$(echo $PERSON_RESPONSE | jq -r '.upload_id')
 echo "Person Upload ID: $PERSON_UPLOAD_ID"
 
 # Step 2: Upload clothing image
-CLOTHING_RESPONSE=$(curl -s -X POST https://virtual-tryon-55.preview.emergentagent.com/api/upload/clothing \
+CLOTHING_RESPONSE=$(curl -s -X POST https://stylegen-9.preview.emergentagent.com/api/upload/clothing \
   -H "Content-Type: application/json" \
   -d '{
     "image": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
@@ -192,7 +192,7 @@ CLOTHING_UPLOAD_ID=$(echo $CLOTHING_RESPONSE | jq -r '.upload_id')
 echo "Clothing Upload ID: $CLOTHING_UPLOAD_ID"
 
 # Step 3: Generate try-on
-curl -X POST https://virtual-tryon-55.preview.emergentagent.com/api/tryon \
+curl -X POST https://stylegen-9.preview.emergentagent.com/api/tryon \
   -H "Content-Type: application/json" \
   -d "{
     \"person_upload_id\": \"$PERSON_UPLOAD_ID\",
@@ -202,7 +202,7 @@ curl -X POST https://virtual-tryon-55.preview.emergentagent.com/api/tryon \
 
 ### Direct Test (if you already have upload IDs)
 ```bash
-curl -X POST https://virtual-tryon-55.preview.emergentagent.com/api/tryon \
+curl -X POST https://stylegen-9.preview.emergentagent.com/api/tryon \
   -H "Content-Type: application/json" \
   -d '{
     "person_upload_id": "c6921362-d6b4-4cfe-8b03-d33c86120be2",
@@ -223,7 +223,7 @@ POST
 
 **URL:**
 ```
-https://virtual-tryon-55.preview.emergentagent.com/api/tryon
+https://stylegen-9.preview.emergentagent.com/api/tryon
 ```
 
 **Authentication:**
@@ -269,7 +269,7 @@ Using JSON
     {
       "parameters": {
         "method": "POST",
-        "url": "https://virtual-tryon-55.preview.emergentagent.com/api/upload/person",
+        "url": "https://stylegen-9.preview.emergentagent.com/api/upload/person",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
@@ -287,7 +287,7 @@ Using JSON
     {
       "parameters": {
         "method": "POST",
-        "url": "https://virtual-tryon-55.preview.emergentagent.com/api/upload/clothing",
+        "url": "https://stylegen-9.preview.emergentagent.com/api/upload/clothing",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
@@ -305,7 +305,7 @@ Using JSON
     {
       "parameters": {
         "method": "POST",
-        "url": "https://virtual-tryon-55.preview.emergentagent.com/api/tryon",
+        "url": "https://stylegen-9.preview.emergentagent.com/api/tryon",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
@@ -467,7 +467,7 @@ In HTTP Request node options:
 
 **Endpoint URL:**
 ```
-https://virtual-tryon-55.preview.emergentagent.com/api/tryon
+https://stylegen-9.preview.emergentagent.com/api/tryon
 ```
 
 **Method:**
@@ -518,7 +518,7 @@ When you call this endpoint:
 
 ## Summary
 
-✅ **Endpoint:** `https://virtual-tryon-55.preview.emergentagent.com/api/tryon`  
+✅ **Endpoint:** `https://stylegen-9.preview.emergentagent.com/api/tryon`  
 ✅ **Method:** POST  
 ✅ **Body:** `{"person_upload_id": "uuid", "clothing_upload_id": "uuid"}`  
 ✅ **Returns:** `{"id": "tryon-id", "result_image": "base64", ...}`  

@@ -8,7 +8,7 @@
 
 **Full URL:**
 ```
-https://virtual-tryon-55.preview.emergentagent.com/api/upload/person
+https://stylegen-9.preview.emergentagent.com/api/upload/person
 ```
 
 **Method:** `POST`
@@ -71,7 +71,7 @@ Content-Type: application/json
 
 1. **Method:** `POST`
 
-2. **URL:** `https://virtual-tryon-55.preview.emergentagent.com/api/upload/person`
+2. **URL:** `https://stylegen-9.preview.emergentagent.com/api/upload/person`
 
 3. **Authentication:** None (unless you add auth later)
 
@@ -117,7 +117,7 @@ return {
 
 ### Step 3: HTTP Request - Upload Person Image
 - **Method:** POST
-- **URL:** `https://virtual-tryon-55.preview.emergentagent.com/api/upload/person`
+- **URL:** `https://stylegen-9.preview.emergentagent.com/api/upload/person`
 - **Body:**
   ```json
   {
@@ -139,7 +139,7 @@ Use Set node to save the upload_id:
 
 ### Basic Test
 ```bash
-curl -X POST https://virtual-tryon-55.preview.emergentagent.com/api/upload/person \
+curl -X POST https://stylegen-9.preview.emergentagent.com/api/upload/person \
   -H "Content-Type: application/json" \
   -d '{
     "image": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
@@ -152,7 +152,7 @@ curl -X POST https://virtual-tryon-55.preview.emergentagent.com/api/upload/perso
 base64 -w 0 person.jpg > person_base64.txt
 
 # Then send it
-curl -X POST https://virtual-tryon-55.preview.emergentagent.com/api/upload/person \
+curl -X POST https://stylegen-9.preview.emergentagent.com/api/upload/person \
   -H "Content-Type: application/json" \
   -d "{\"image\":\"$(cat person_base64.txt)\"}"
 ```
@@ -179,7 +179,7 @@ POST
 
 **URL:**
 ```
-https://virtual-tryon-55.preview.emergentagent.com/api/upload/person
+https://stylegen-9.preview.emergentagent.com/api/upload/person
 ```
 
 **Authentication:**
@@ -225,7 +225,7 @@ You can import this directly into n8n:
     {
       "parameters": {
         "method": "POST",
-        "url": "https://virtual-tryon-55.preview.emergentagent.com/api/upload/person",
+        "url": "https://stylegen-9.preview.emergentagent.com/api/upload/person",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
@@ -322,7 +322,7 @@ In HTTP Request node options:
 
 **Endpoint URL:**
 ```
-https://virtual-tryon-55.preview.emergentagent.com/api/upload/person
+https://stylegen-9.preview.emergentagent.com/api/upload/person
 ```
 
 **Method:**
@@ -377,7 +377,7 @@ iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAA
 
 ## Summary
 
-✅ **Endpoint:** `https://virtual-tryon-55.preview.emergentagent.com/api/upload/person`  
+✅ **Endpoint:** `https://stylegen-9.preview.emergentagent.com/api/upload/person`  
 ✅ **Method:** POST  
 ✅ **Body:** `{"image": "base64-string"}`  
 ✅ **Returns:** `{"upload_id": "uuid", ...}`  

@@ -353,7 +353,7 @@ The output image's clothing must be a perfect visual match to the garment in Ima
         # Generate content
         response = await asyncio.to_thread(
             client.models.generate_content,
-            model="gemini-2.5-flash-image",
+            model="gemini-3-pro-image-preview",
             contents=content,
             config=config
         )

@@ -157,7 +157,23 @@ const TryOnApp = () => {
           const base64 = dataUrl.split(',')[1];
           resolve({ base64, preview: dataUrl });
         };
+        img.onerror = (err) => {
+            console.error('Image load error during resize:', err);
+            // Fallback to original if resize fails
+             const reader2 = new FileReader();
+             reader2.readAsDataURL(file);
+             reader2.onload = (e) => {
+                 const base64 = e.target.result.split(',')[1];
+                 resolve({ base64, preview: e.target.result });
+             }
+        }
       };
+      reader.onerror = (err) => {
+          console.error('File read error:', err);
+          // Reject so handleImageUpload catches it
+          // Or we can return null and let caller handle
+          throw err;
+      }
     });
   };
 
@@ -447,6 +463,8 @@ const TryOnApp = () => {
                   <span className="upload-icon">📸</span>
                   <p className="upload-text">Tap to upload your photo</p>
                   <p className="upload-hint">or drag and drop</p>
+                onClick={(e) => { e.stopPropagation(); personInputRef.current?.click(); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); personInputRef.current?.click(); } }}
                 </div>
               )}
             </div>
@@ -496,6 +514,8 @@ const TryOnApp = () => {
                   <span className="upload-icon">👗</span>
                   <p className="upload-text">Tap to upload clothing</p>
                   <p className="upload-hint">or drag and drop</p>
+                onClick={(e) => { e.stopPropagation(); clothingInputRef.current?.click(); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); clothingInputRef.current?.click(); } }}
                 </div>
               )}
             </div>

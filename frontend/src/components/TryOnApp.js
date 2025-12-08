@@ -122,6 +122,108 @@ const TryOnApp = () => {
     });
   };
   // Resize image before converting to base64
+  // Helper: Get file extension/type
+  const getFileType = (file) => {
+    return file.type || 'unknown';
+  };
+
+  // Modern Image Resizer using createImageBitmap (better for Mobile/HEIC)
+  const resizeImage = async (file, maxWidth = 1024, maxHeight = 1024) => {
+    try {
+      console.log('Processing file:', file.name, file.type, file.size);
+      
+      // Attempt 1: createImageBitmap (Fastest & Modern)
+      // Works on most modern Android/iOS browsers and handles some formats Image() doesn't
+      let bitmap = null;
+      try {
+        bitmap = await createImageBitmap(file);
+      } catch (bitmapError) {
+        console.warn('createImageBitmap failed, falling back to FileReader:', bitmapError);
+      }
+
+      if (bitmap) {
+        let width = bitmap.width;
+        let height = bitmap.height;
+
+        // Calculate new dimensions
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(bitmap, 0, 0, width, height);
+        
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        const base64 = dataUrl.split(',')[1];
+        bitmap.close(); // Clean up memory
+        return { base64, preview: dataUrl };
+      }
+
+      // Attempt 2: FileReader + Image (Legacy/Fallback)
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            // Calculate new dimensions
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            const base64 = dataUrl.split(',')[1];
+            resolve({ base64, preview: dataUrl });
+          };
+          
+          img.onerror = (err) => {
+            console.error('Image object failed to load (likely format issue):', err);
+            // Attempt 3: If Image() fails (e.g., HEIC in old WebView), 
+            // we have no choice but to try the raw file if backend supports it,
+            // OR fail gracefully.
+            // Currently backend needs base64. 
+            // Let's reject with a clear message.
+            reject(new Error('Unable to load image. Format might be unsupported (e.g., HEIC). Please use JPEG/PNG.'));
+          };
+          
+          img.src = event.target.result;
+        };
+        reader.onerror = (err) => reject(err);
+      });
+
+    } catch (err) {
+      throw err;
+    }
+  };
+
   const resizeImage = (file, maxWidth = 1024, maxHeight = 1024) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -209,7 +311,7 @@ const TryOnApp = () => {
     if (!file) return;
 
     try {
-      // Compress and resize
+      // Compress and resize using modern method
       const { base64, preview } = await resizeImage(file);
       
       if (type === 'person') {
@@ -219,7 +321,12 @@ const TryOnApp = () => {
       }
       setError(null);
     } catch (err) {
-      setError('Failed to process image. Please try again.');
+      // Handle specific errors
+      if (err.message && err.message.includes('Format might be unsupported')) {
+         setError('Image format not supported (likely HEIC). Please use JPEG or PNG, or take a photo directly.');
+      } else {
+         setError('Failed to process image. Please try a different photo.');
+      }
       console.error('Error processing image:', err);
     }
   };
@@ -228,19 +335,16 @@ const TryOnApp = () => {
   const handlePaste = async (e, type) => {
     const items = e.clipboardData.items;
     
-    for (let item of items) {
-      if (item.type.indexOf('image') !== -1) {
-        const file = item.getAsFile();
-        const { base64, preview } = await resizeImage(file);
-        
-        if (type === 'person') {
-          setPersonImage({ base64, preview });
-        } else {
-          setClothingImage({ base64, preview });
-        }
-        setError(null);
-        break;
+    try {
+      const { base64, preview } = await resizeImage(file);
+      
+      if (type === 'person') {
+        setPersonImage({ base64, preview });
+      } else {
+        setClothingImage({ base64, preview });
       }
+      setError(null);
+      break;
     }
   };
 

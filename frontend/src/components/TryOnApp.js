@@ -282,16 +282,24 @@ const TryOnApp = () => {
   const handlePaste = async (e, type) => {
     const items = e.clipboardData.items;
     
-    try {
-      const { base64, preview } = await resizeImage(file);
-      
-      if (type === 'person') {
-        setPersonImage({ base64, preview });
-      } else {
-        setClothingImage({ base64, preview });
+    for (let item of items) {
+      if (item.type.indexOf('image') !== -1) {
+        const file = item.getAsFile();
+        try {
+          const { base64, preview } = await resizeImage(file);
+          
+          if (type === 'person') {
+            setPersonImage({ base64, preview });
+          } else {
+            setClothingImage({ base64, preview });
+          }
+          setError(null);
+        } catch (err) {
+          console.error('Error processing pasted image:', err);
+          setError('Failed to process pasted image');
+        }
+        break;
       }
-      setError(null);
-      break;
     }
   };
 

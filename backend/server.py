@@ -72,7 +72,7 @@ class TryOnWithIdsRequest(BaseModel):
 
 
 # N8N Webhook Configuration
-N8N_WEBHOOK_URL = "https://99.6.135.187:7801/webhook/upload"
+N8N_WEBHOOK_URL = "http://99.6.135.187:7801/webhook/upload"
 
 async def send_to_n8n_webhook(person_image_base64: str, clothing_image_base64: str, result_image_base64: str, tryon_id: str):
     """

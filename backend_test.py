@@ -195,7 +195,7 @@ class TestN8NWebhookIntegration:
                 self.test_results.append("✅ Webhook Function Signature: CORRECT")
                 
                 # Verify webhook URL is correct
-                if N8N_WEBHOOK_URL == "https://spantra.app.n8n.cloud/webhook/upload":
+                if N8N_WEBHOOK_URL == "https://99.6.135.187:7801/webhook/upload":
                     self.test_results.append("✅ Webhook URL: CORRECT")
                     return True
                 else:

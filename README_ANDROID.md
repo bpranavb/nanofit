@@ -1,4 +1,4 @@
-# Building the Spantra Android App
+# Building the TryOn Android App
 
 This project has been configured with **Capacitor** to allow you to build a native Android application.
 

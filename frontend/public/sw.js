@@ -1,4 +1,4 @@
-const CACHE_NAME = 'spantra-app-v1';
+const CACHE_NAME = 'tryon-app-v1';
 const urlsToCache = [
   '/',
   '/index.html',

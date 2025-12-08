@@ -360,6 +360,7 @@ const TryOnApp = () => {
     }
 
     try {
+      // Compress and resize using modern method
       const { base64, preview } = await resizeImage(file);
       
       if (type === 'person') {
@@ -369,7 +370,12 @@ const TryOnApp = () => {
       }
       setError(null);
     } catch (err) {
-      setError('Failed to process image. Please try again.');
+      // Handle specific errors
+      if (err.message && err.message.includes('Format might be unsupported')) {
+         setError('Image format not supported (likely HEIC). Please use JPEG or PNG, or take a photo directly.');
+      } else {
+         setError('Failed to process image. Please try a different photo.');
+      }
       console.error('Error processing image:', err);
     }
   };

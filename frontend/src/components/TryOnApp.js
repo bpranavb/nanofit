@@ -447,6 +447,7 @@ const TryOnApp = () => {
             <div 
               className="upload-area"
               onClick={() => personInputRef.current?.click()}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); personInputRef.current?.click(); } }}
               onDrop={(e) => handleDrop(e, 'person')}
               onDragOver={handleDragOver}
               onPaste={(e) => handlePaste(e, 'person')}
@@ -463,8 +464,6 @@ const TryOnApp = () => {
                   <span className="upload-icon">📸</span>
                   <p className="upload-text">Tap to upload your photo</p>
                   <p className="upload-hint">or drag and drop</p>
-                onClick={(e) => { e.stopPropagation(); personInputRef.current?.click(); }}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); personInputRef.current?.click(); } }}
                 </div>
               )}
             </div>
@@ -498,6 +497,7 @@ const TryOnApp = () => {
             <div 
               className="upload-area"
               onClick={() => clothingInputRef.current?.click()}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clothingInputRef.current?.click(); } }}
               onDrop={(e) => handleDrop(e, 'clothing')}
               onDragOver={handleDragOver}
               onPaste={(e) => handlePaste(e, 'clothing')}
@@ -514,8 +514,6 @@ const TryOnApp = () => {
                   <span className="upload-icon">👗</span>
                   <p className="upload-text">Tap to upload clothing</p>
                   <p className="upload-hint">or drag and drop</p>
-                onClick={(e) => { e.stopPropagation(); clothingInputRef.current?.click(); }}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); clothingInputRef.current?.click(); } }}
                 </div>
               )}
             </div>

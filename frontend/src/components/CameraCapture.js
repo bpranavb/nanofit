@@ -7,18 +7,26 @@ const CameraCapture = ({ onCapture, onClose, type }) => {
   const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [error, setError] = useState(null);
+  const [facingMode, setFacingMode] = useState('environment'); // Default to back camera
 
   useEffect(() => {
     startCamera();
     return () => {
       stopCamera();
     };
-  }, []);
+  }, [facingMode]); // Restart camera when facingMode changes
 
   const startCamera = async () => {
+    // Stop any existing stream first
+    stopCamera();
+    
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: 1280, height: 720 }
+        video: { 
+          facingMode: facingMode,
+          width: { ideal: 1920 },
+          height: { ideal: 1080 } 
+        }
       });
       
       if (videoRef.current) {
@@ -28,7 +36,24 @@ const CameraCapture = ({ onCapture, onClose, type }) => {
       setError(null);
     } catch (err) {
       console.error('Error accessing camera:', err);
-      setError('Unable to access camera. Please check permissions.');
+      // Fallback: If 'environment' fails, try any camera (e.g. laptop webcam)
+      if (facingMode === 'environment') {
+         console.log('Environment camera failed, trying default user camera');
+         try {
+            const fallbackStream = await navigator.mediaDevices.getUserMedia({
+                video: true
+            });
+            if (videoRef.current) {
+                videoRef.current.srcObject = fallbackStream;
+            }
+            setStream(fallbackStream);
+            setError(null);
+         } catch (fallbackErr) {
+             setError('Unable to access camera. Please check permissions.');
+         }
+      } else {
+         setError('Unable to access camera. Please check permissions.');
+      }
     }
   };
 
@@ -36,6 +61,13 @@ const CameraCapture = ({ onCapture, onClose, type }) => {
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
     }
+    if (videoRef.current) {
+        videoRef.current.srcObject = null;
+    }
+  };
+
+  const toggleCamera = () => {
+    setFacingMode(prevMode => prevMode === 'user' ? 'environment' : 'user');
   };
 
   const capturePhoto = () => {
@@ -73,6 +105,10 @@ const CameraCapture = ({ onCapture, onClose, type }) => {
         <div className="camera-header">
           <h2>Capture {type === 'person' ? 'Person' : 'Clothing'} Photo</h2>
           <button className="close-button" onClick={() => { stopCamera(); onClose(); }}>
+              <button className="camera-button switch" onClick={toggleCamera}>
+                <span className="camera-icon">🔄</span>
+                Switch
+              </button>
             ✕
           </button>
         </div>

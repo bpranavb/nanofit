@@ -161,4 +161,15 @@
     padding: 1.2rem 2.5rem;
     font-size: 1.2rem;
   }
+  }
+}
+
+.camera-button.switch {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.camera-button.switch:hover {
+  background: #e0e0e0;
+  transform: scale(1.05);
 }

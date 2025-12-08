@@ -257,7 +257,14 @@ const TryOnApp = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Show loading state immediately
+    setLoading(true);
+    setLoadingMessage('Processing image...');
+    setError(null);
+
     try {
+      console.log(`Uploading ${type}:`, file.name, file.type, file.size);
+      
       // Compress and resize using modern method
       const { base64, preview } = await resizeImage(file);
       
@@ -266,15 +273,19 @@ const TryOnApp = () => {
       } else {
         setClothingImage({ base64, preview });
       }
-      setError(null);
     } catch (err) {
       // Handle specific errors
-      if (err.message && err.message.includes('Format might be unsupported')) {
-         setError('Image format not supported (likely HEIC). Please use JPEG or PNG, or take a photo directly.');
-      } else {
-         setError('Failed to process image. Please try a different photo.');
+      let errorMsg = 'Failed to process image. Please try a different photo.';
+      if (err.message && err.message.includes('Format')) {
+         errorMsg = err.message;
       }
+      setError(errorMsg);
       console.error('Error processing image:', err);
+      // Alert for easier debugging on mobile
+      alert(`Error: ${errorMsg}\nDetails: ${err.message}`);
+    } finally {
+      setLoading(false);
+      setLoadingMessage('');
     }
   };
 

@@ -130,10 +130,8 @@ const TryOnApp = () => {
   // Modern Image Resizer using createImageBitmap (better for Mobile/HEIC)
   const resizeImage = async (file, maxWidth = 1024, maxHeight = 1024) => {
     try {
-      console.log('Processing file:', file.name, file.type, file.size);
-      
       // Attempt 1: createImageBitmap (Fastest & Modern)
-      // Works on most modern Android/iOS browsers and handles some formats Image() doesn't
+      // We prioritize this for Android/Tablets
       let bitmap = null;
       try {
         bitmap = await createImageBitmap(file);
@@ -145,7 +143,6 @@ const TryOnApp = () => {
         let width = bitmap.width;
         let height = bitmap.height;
 
-        // Calculate new dimensions
         if (width > height) {
           if (width > maxWidth) {
             height = Math.round((height * maxWidth) / width);
@@ -164,9 +161,10 @@ const TryOnApp = () => {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(bitmap, 0, 0, width, height);
         
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        // High quality output
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
         const base64 = dataUrl.split(',')[1];
-        bitmap.close(); // Clean up memory
+        bitmap.close(); 
         return { base64, preview: dataUrl };
       }
 
@@ -180,7 +178,6 @@ const TryOnApp = () => {
             let width = img.width;
             let height = img.height;
 
-            // Calculate new dimensions
             if (width > height) {
               if (width > maxWidth) {
                 height = Math.round((height * maxWidth) / width);
@@ -199,19 +196,15 @@ const TryOnApp = () => {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
             const base64 = dataUrl.split(',')[1];
             resolve({ base64, preview: dataUrl });
           };
           
           img.onerror = (err) => {
-            console.error('Image object failed to load (likely format issue):', err);
-            // Attempt 3: If Image() fails (e.g., HEIC in old WebView), 
-            // we have no choice but to try the raw file if backend supports it,
-            // OR fail gracefully.
-            // Currently backend needs base64. 
-            // Let's reject with a clear message.
-            reject(new Error('Unable to load image. Format might be unsupported (e.g., HEIC). Please use JPEG/PNG.'));
+            // If standard load fails, try reading raw bytes if possible, 
+            // but for now, just fail with specific message
+            reject(new Error('Image format unsupported by browser. Please try a screenshot or different photo.'));
           };
           
           img.src = event.target.result;
@@ -257,7 +250,9 @@ const TryOnApp = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Show loading state immediately
+    // Debug Alert 1
+    // alert(`Selected: ${file.name} (${(file.size/1024/1024).toFixed(2)}MB)`);
+
     setLoading(true);
     setLoadingMessage('Processing image...');
     setError(null);
@@ -268,6 +263,9 @@ const TryOnApp = () => {
       // Compress and resize using modern method
       const { base64, preview } = await resizeImage(file);
       
+      // Debug Alert 2
+      // alert('Resize successful');
+
       if (type === 'person') {
         setPersonImage({ base64, preview });
       } else {
@@ -281,7 +279,6 @@ const TryOnApp = () => {
       }
       setError(errorMsg);
       console.error('Error processing image:', err);
-      // Alert for easier debugging on mobile
       alert(`Error: ${errorMsg}\nDetails: ${err.message}`);
     } finally {
       setLoading(false);

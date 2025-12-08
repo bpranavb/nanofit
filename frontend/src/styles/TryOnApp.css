@@ -1,5 +1,6 @@
 .tryon-app {
-  min-height: 100vh;
+  min-height: 100vh; /* Fallback for older browsers */
+  min-height: 100dvh; /* Dynamic Viewport Height for Mobile */
   background: linear-gradient(135deg, #f5f5dc 0%, #e6e6fa 100%);
 }
 

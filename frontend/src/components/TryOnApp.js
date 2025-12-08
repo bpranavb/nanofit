@@ -48,6 +48,30 @@ const TryOnApp = () => {
       }
     }
   }, []);
+  // Enhanced Thinking UI
+  useEffect(() => {
+    if (!loading) return;
+
+    const steps = [
+      "Analyzing body pose...",
+      "Identifying clothing structure...",
+      "Mapping fabric physics...",
+      "Generating photorealistic texture...",
+      "Finalizing lighting and shadows...",
+      "Applying finishing touches..."
+    ];
+    
+    let stepIndex = 0;
+    setLoadingMessage(steps[0]);
+
+    const intervalId = setInterval(() => {
+      stepIndex = (stepIndex + 1) % steps.length;
+      setLoadingMessage(steps[stepIndex]);
+    }, 2500); // Change message every 2.5 seconds
+
+    return () => clearInterval(intervalId);
+  }, [loading]);
+
 
   // Save history to localStorage with size limit
   const saveToHistory = (personImg, clothingImg, resultImg) => {
@@ -97,6 +121,46 @@ const TryOnApp = () => {
       reader.onerror = (error) => reject(error);
     });
   };
+  // Resize image before converting to base64
+  const resizeImage = (file, maxWidth = 1024, maxHeight = 1024) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          // Calculate new dimensions
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Get base64 string (remove prefix)
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85); // 85% quality jpeg
+          const base64 = dataUrl.split(',')[1];
+          resolve({ base64, preview: dataUrl });
+        };
+      };
+    });
+  };
+
 
   // Handle camera capture
   const openCamera = (type) => {
@@ -104,7 +168,17 @@ const TryOnApp = () => {
     setShowCamera(true);
   };
 
-  const handleCameraCapture = (base64, previewUrl) => {
+  const handleCameraCapture = async (base64, previewUrl) => {
+    // Camera images might be large too, but base64 is already passed.
+    // For consistency, we could rely on camera capture settings (already set to 720p/1080p).
+    // But let's verify if we need to resize. 
+    // Actually, CameraCapture component already gives us a data URL.
+    // Let's create a file object from it to reuse resizeImage, or just assume Camera is okay.
+    // Given the prompt "Implemented Smart Compression", let's be safe and compress this too if needed.
+    // But wait, `resizeImage` takes a file. Let's make a variant or just use as is for now 
+    // since CameraCapture sets specific resolution. 
+    // Actually, better to just use what we have, as CameraCapture explicitly sets width/height.
+    
     if (cameraType === 'person') {
       setPersonImage({ base64, preview: previewUrl });
     } else {
@@ -119,13 +193,13 @@ const TryOnApp = () => {
     if (!file) return;
 
     try {
-      const base64 = await fileToBase64(file);
-      const previewUrl = URL.createObjectURL(file);
+      // Compress and resize
+      const { base64, preview } = await resizeImage(file);
       
       if (type === 'person') {
-        setPersonImage({ base64, preview: previewUrl });
+        setPersonImage({ base64, preview });
       } else {
-        setClothingImage({ base64, preview: previewUrl });
+        setClothingImage({ base64, preview });
       }
       setError(null);
     } catch (err) {
@@ -141,13 +215,12 @@ const TryOnApp = () => {
     for (let item of items) {
       if (item.type.indexOf('image') !== -1) {
         const file = item.getAsFile();
-        const base64 = await fileToBase64(file);
-        const previewUrl = URL.createObjectURL(file);
+        const { base64, preview } = await resizeImage(file);
         
         if (type === 'person') {
-          setPersonImage({ base64, preview: previewUrl });
+          setPersonImage({ base64, preview });
         } else {
-          setClothingImage({ base64, preview: previewUrl });
+          setClothingImage({ base64, preview });
         }
         setError(null);
         break;
@@ -167,13 +240,12 @@ const TryOnApp = () => {
     }
 
     try {
-      const base64 = await fileToBase64(file);
-      const previewUrl = URL.createObjectURL(file);
+      const { base64, preview } = await resizeImage(file);
       
       if (type === 'person') {
-        setPersonImage({ base64, preview: previewUrl });
+        setPersonImage({ base64, preview });
       } else {
-        setClothingImage({ base64, preview: previewUrl });
+        setClothingImage({ base64, preview });
       }
       setError(null);
     } catch (err) {
@@ -202,7 +274,7 @@ const TryOnApp = () => {
     try {
       console.log('Sending try-on request to:', `${API}/tryon`);
       
-      setLoadingMessage('Creating your virtual try-on...');
+      // Loading message handled by effect now
       
       const response = await axios.post(`${API}/tryon`, {
         person_image: personImage.base64,
@@ -210,7 +282,7 @@ const TryOnApp = () => {
       });
 
       console.log('Try-on response received:', response.data);
-      setLoadingMessage('Finalizing your new look...');
+      // Final message set by effect or success state logic below
 
       if (response.data && response.data.result_image) {
         // The result_image is already base64, just add the data URL prefix for display

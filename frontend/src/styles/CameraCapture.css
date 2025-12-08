@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,43 +16,46 @@
   border-radius: 25px;
   width: 90%;
   max-width: 800px;
+  height: auto;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 
+/* Header */
 .camera-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem;
-  border-bottom: 2px solid #f0f0f0;
+  padding: 1.5rem;
+  background: white;
+  z-index: 10;
 }
 
 .camera-header h2 {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #2d2d2d;
   margin: 0;
 }
 
 .close-button {
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   background: #f5f5f5;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.close-button:hover {
-  background: #e6e6fa;
-  transform: scale(1.1);
-}
-
+/* Content Area (Video) */
 .camera-content {
   flex: 1;
   display: flex;
@@ -60,107 +63,46 @@
   justify-content: center;
   background: #000;
   position: relative;
-  min-height: 400px;
+  overflow: hidden;
+  min-height: 0; /* CRITICAL: Allows flex child to shrink below content size */
 }
 
 .camera-video,
 .captured-preview {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: contain; /* Ensures entire camera feed is visible */
 }
 
-.camera-error {
-  text-align: center;
-  color: white;
-  padding: 2rem;
-}
-
-.camera-error p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-}
-
-.retry-button {
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  background: #b19cd9;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
+/* Controls (Footer) */
 .camera-controls {
   display: flex;
-  gap: 1.5rem;
-  padding: 2rem;
+  gap: 1rem;
+  padding: 1.5rem;
   justify-content: center;
   background: white;
+  z-index: 10;
 }
 
 .camera-button {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.5rem 3rem;
-  font-size: 1.4rem;
-  font-weight: 700;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   border: none;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 180px;
-  justify-content: center;
+  transition: all 0.2s ease;
+  min-width: 120px;
 }
 
 .camera-button.capture {
   background: linear-gradient(135deg, #dda0dd 0%, #b19cd9 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(221, 160, 221, 0.4);
-}
-
-.camera-button.capture:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(221, 160, 221, 0.5);
-}
-
-.camera-button.retake {
-  background: #f5f5f5;
-  color: #5a5a5a;
-}
-
-.camera-button.retake:hover {
-  background: #e6e6fa;
-  transform: scale(1.05);
-}
-
-.camera-button.use {
-  background: #4caf50;
-  color: white;
-}
-
-.camera-button.use:hover {
-  background: #45a049;
-  transform: scale(1.05);
-}
-
-.camera-icon {
-  font-size: 2rem;
-}
-
-/* Tablet Optimization */
-@media (max-width: 1024px) {
-  .camera-container {
-    width: 95%;
-  }
-
-  .camera-button {
-    min-width: 150px;
-    padding: 1.2rem 2.5rem;
-    font-size: 1.2rem;
-  }
+  box-shadow: 0 4px 10px rgba(221, 160, 221, 0.4);
 }
 
 .camera-button.switch {
@@ -168,7 +110,110 @@
   color: #333;
 }
 
-.camera-button.switch:hover {
-  background: #e0e0e0;
-  transform: scale(1.05);
+.camera-button.retake {
+  background: #f5f5f5;
+  color: #5a5a5a;
+}
+
+.camera-button.use {
+  background: #4caf50;
+  color: white;
+}
+
+/* --- MOBILE & TABLET PORTRAIT (Vertical) --- */
+@media (max-width: 768px) {
+  .camera-container {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+
+  .camera-header {
+    padding: 1rem;
+    background: rgba(0,0,0,0.5); /* Overlay header */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: white;
+    border: none;
+  }
+  
+  .camera-header h2 {
+    color: white;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .camera-controls {
+    padding: 1.5rem 1rem;
+    background: rgba(0,0,0,0.8); /* Overlay footer */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    backdrop-filter: blur(5px);
+  }
+  
+  /* Make video fill entire screen behind controls */
+  .camera-content {
+    height: 100%; 
+  }
+  
+  .camera-video {
+    object-fit: cover; /* Fill screen like native camera app */
+  }
+}
+
+/* --- LANDSCAPE MODE (Side-by-Side Layout) --- */
+@media (orientation: landscape) and (max-height: 600px) {
+  .camera-container {
+    flex-direction: row; /* Horizontal layout */
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  /* Header becomes a floating close button */
+  .camera-header {
+    position: absolute;
+    top: 10px;
+    right: 120px; /* Position to left of sidebar */
+    width: auto;
+    background: transparent;
+    padding: 0;
+    border: none;
+  }
+
+  .camera-header h2 {
+    display: none; /* Hide title in landscape to save space */
+  }
+
+  /* Sidebar Controls */
+  .camera-controls {
+    flex-direction: column;
+    width: 140px;
+    padding: 1rem;
+    height: 100%;
+    justify-content: center;
+    background: rgba(0,0,0,0.9);
+    position: static; /* Reset absolute from mobile styles */
+  }
+
+  .camera-content {
+    flex: 1;
+    height: 100%;
+  }
+
+  .camera-button {
+    width: 100%;
+    min-width: 0;
+    padding: 0.8rem;
+    flex-direction: column; /* Stack icon and text */
+    text-align: center;
+    font-size: 0.9rem;
+  }
 }

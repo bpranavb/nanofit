@@ -224,60 +224,7 @@ const TryOnApp = () => {
     }
   };
 
-  const resizeImage = (file, maxWidth = 1024, maxHeight = 1024) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-          let width = img.width;
-          let height = img.height;
-
-          // Calculate new dimensions
-          if (width > height) {
-            if (width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width = Math.round((width * maxHeight) / height);
-              height = maxHeight;
-            }
-          }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          // Get base64 string (remove prefix)
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.85); // 85% quality jpeg
-          const base64 = dataUrl.split(',')[1];
-          resolve({ base64, preview: dataUrl });
-        };
-        img.onerror = (err) => {
-            console.error('Image load error during resize:', err);
-            // Fallback to original if resize fails
-             const reader2 = new FileReader();
-             reader2.readAsDataURL(file);
-             reader2.onload = (e) => {
-                 const base64 = e.target.result.split(',')[1];
-                 resolve({ base64, preview: e.target.result });
-             }
-        }
-      };
-      reader.onerror = (err) => {
-          console.error('File read error:', err);
-          // Reject so handleImageUpload catches it
-          // Or we can return null and let caller handle
-          throw err;
-      }
-    });
-  };
+  // (Duplicate function removed)
 
 
   // Handle camera capture

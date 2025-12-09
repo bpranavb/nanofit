@@ -78,6 +78,6 @@ agenthub/agents/youtube/db
 
 # Mobile development
 android-sdk/ -e 
-# Environment files
-*.env
-*.env.*
+# Environment files - Do not block for Emergent deployment
+# *.env
+# *.env.*

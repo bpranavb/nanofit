@@ -6,6 +6,7 @@ import HistoryPanel from './HistoryPanel';
 import FeedbackForm from './FeedbackForm';
 import FeedbackViewer from './FeedbackViewer';
 import '../styles/TryOnApp.css';
+import LoadingOverlay from './LoadingOverlay';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

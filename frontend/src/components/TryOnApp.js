@@ -411,9 +411,15 @@ const TryOnApp = () => {
       {/* Header */}
       <header className="app-header">
         <div className="header-content">
-          <button className="back-button" onClick={() => navigate('/')}>
-            ← Back
-          </button>
+          {resultImage ? (
+            <button className="back-button" onClick={handleBackToInputs}>
+              ← Edit Inputs
+            </button>
+          ) : (
+            <button className="back-button" onClick={() => navigate('/')}>
+              ← Home
+            </button>
+          )}
           <h1 className="app-title">Virtual Try-On</h1>
           <div className="header-actions">
             <button className="header-button" onClick={() => setShowFeedbackViewer(true)}>

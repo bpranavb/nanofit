@@ -329,37 +329,37 @@ async def create_tryon(request: TryOnRequest):
         
         logger.info("Calling Gemini for virtual try-on...")
         
-        # Enhanced prompt with strongest identity preservation
+        # Enhanced prompt with strongest identity preservation + Headwear support
         text_prompt = """**Primary Directive: High-Fidelity Virtual Try-On**
 
-You are an expert digital tailor. Your task is to execute a precise clothing swap.
+You are an expert digital tailor. Your task is to execute a precise clothing/accessory swap.
 
-**!!! CORE SAFETY DIRECTIVE: PROTECT IDENTITY !!!**
-**This is the most important rule. The person's face and head in Image 1 are a STRICT NO-EDIT ZONE. They must be transferred to the final image perfectly, pixel for pixel, without ANY modification. Any change to the facial features, expression, skin tone, or hair is a complete failure of the task.**
+**!!! CORE SAFETY DIRECTIVE: PROTECT FACIAL IDENTITY !!!**
+**The person's facial features (eyes, nose, mouth, jawline, skin tone) in Image 1 are a STRICT NO-EDIT ZONE. They must be preserved perfectly to maintain identity. Any distortion to the face is a failure.**
 
 **Input Definitions:**
-- **Image 1 (The Canvas):** Contains the person, their pose, and the background. This is the base image that will be edited.
-- **Image 2 (The Source):** Contains the garment(s). This is the ONLY source for the new clothing's appearance.
+- **Image 1 (The Canvas):** Contains the person.
+- **Image 2 (The Source):** Contains the garment(s) or accessory.
 
 **--- CRITICAL RULES ---**
 
-1.  **PRESERVE THE CANVAS:** As stated in the Core Safety Directive, the person's identity is paramount. In addition, the original **pose** and the entire **background** MUST be preserved with photorealistic accuracy. Do not change them.
-
-2.  **EXTRACT FROM THE SOURCE:** You must analyze Image 2 to extract the garment's key attributes:
-    - **Exact Color:** The precise hue, saturation, and brightness.
-    - **Complete Pattern & Design:** The full visual design, embroidery, or print.
-    - **Fabric Texture:** The material's look and feel (e.g., cotton, silk, denim).
-
-3.  **DISCARD ORIGINAL CLOTHING:** You MUST completely ignore and discard all visual information from the clothes the person is wearing in Image 1. Their original clothing's color, pattern, and texture are IRRELEVANT and must NOT influence the output.
+1.  **PRESERVE THE CANVAS:** Keep the original pose and background exactly as they are.
+2.  **SMART MAPPING (Headwear Exception):** 
+    - generally, do NOT edit the head or hair.
+    - **HOWEVER**, if the source item is **HEADWEAR** (hat, cap, beanie, sunglasses, etc.), you **MUST** apply it to the person's head/face appropriately, modifying hair/head shape only as needed to fit the item realistically.
+3.  **EXTRACT FROM THE SOURCE:** Accurately transfer the color, pattern, and texture from Image 2.
+4.  **DISCARD ORIGINAL CLOTHING:** Ignore the old clothes in the target area.
 
 **--- STEP-BY-STEP EXECUTION ---**
 
-1.  **Isolate:** Identify and isolate the primary garment(s) in Image 2. Ignore any mannequin, hanger, or person.
-2.  **Map:** Identify the area of clothing on the person in Image 1, carefully excluding the head, neck, and hands.
-3.  **Replace and Render:** Generate a new image where you flawlessly render the extracted garment attributes (Exact Color, Design, Texture) from Image 2 onto the mapped clothing area of Image 1. The new clothing must fit the person's body and pose naturally, including realistic folds and shadows.
+1.  **Analyze Source:** Is it a shirt? Pants? A Hat? A Dress?
+2.  **Map Target:** 
+    - If Shirt/Pants/Dress -> Map to body, exclude head/hands.
+    - If Hat/Glasses -> Map to head/face, preserving identity features underneath.
+3.  **Render:** Generate the photorealistic result.
 
 **!! FINAL MANDATE !!**
-The output image's clothing must be a perfect visual match to the garment in Image 2. The person's face and identity must be 100% identical to Image 1. There should be zero color blending from the original clothing. The resulting image must be photorealistic and seamlessly edited."""
+Identity protected. Clothing/Accessory perfectly transferred. Photorealistic."""
         
         optimized_text_part = types.Part(text=text_prompt)
         

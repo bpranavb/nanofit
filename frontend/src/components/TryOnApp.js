@@ -315,7 +315,13 @@ const TryOnApp = () => {
     }
   };
 
-  // Start over function
+  // Back to inputs (Clear result only)
+  const handleBackToInputs = () => {
+    setResultImage(null);
+    setLoadingMessage('');
+  };
+
+  // Start over function (Clear everything)
   const handleStartOver = () => {
     setPersonImage(null);
     setClothingImage(null);

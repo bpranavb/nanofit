@@ -535,10 +535,10 @@ async def get_all_feedback():
     Get all feedback from try-ons with enhanced tracking
     """
     try:
-        # Find all try-ons that have feedback
+        # Find all try-ons that have feedback - Limit to 50 for performance
         tryons_with_feedback = await db.tryons.find(
             {"feedback": {"$exists": True}}
-        ).to_list(1000)
+        ).sort("feedback.feedback_timestamp", -1).limit(50).to_list(50)
         
         feedback_list = []
         daily_counts = {}

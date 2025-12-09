@@ -173,15 +173,22 @@
   object-fit: contain;
 
 .upload-actions {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   gap: 1rem;
   margin-top: 1.5rem;
+  width: 100%;
 }
 
 .upload-action-button {
   flex: 1;
   padding: 0.8rem;
   border-radius: var(--radius-md);
+  min-width: 0; /* Allow shrinking */
+  white-space: nowrap; /* Prevent text wrap */
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 0.95rem;
   font-weight: 500;
   border: 1px solid var(--color-border);

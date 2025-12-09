@@ -631,19 +631,10 @@ const TryOnApp = () => {
             onClick={handleGenerate}
             disabled={loading || !personImage || !clothingImage}
           >
-            {loading ? (
-              <>
-                <span className="spinner"></span>
-                Generating...
-              </>
-            ) : (
-              'Generate Try-On'
-            )}
+            {loading ? 'Generating...' : 'Generate Try-On'}
           </button>
           
-          {loading && loadingMessage && (
-            <p className="loading-message">{loadingMessage}</p>
-          )}
+          {/* loadingMessage removed - moved to overlay */}
           
           {error && (
             <div className="error-message">

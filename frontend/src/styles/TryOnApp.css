@@ -412,3 +412,8 @@
     padding: 1.5rem;
   }
 }
+  /* On mobile/portrait, cover might be better to fill the box, 
+     but let's stick to contain to ensure heads aren't cut off */
+  .preview-image {
+    object-fit: contain;
+  }

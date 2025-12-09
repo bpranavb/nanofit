@@ -7,7 +7,7 @@ import requests
 load_dotenv('/app/backend/.env')
 
 client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),
+    api_key="sk-emergent-4549512A1A464195f0",
     base_url="https://llm.emergent.sh/v1",
 )
 

@@ -431,58 +431,21 @@ const TryOnApp = () => {
         {/* Input Section */}
         <div className="input-section">
           {/* Person Image Upload */}
-          <div className="upload-card">
-            <h3 className="upload-title">Your Photo</h3>
-            <label 
-              className="upload-area"
-              htmlFor="person-upload"
-              onDrop={(e) => handleDrop(e, 'person')}
-              onDragOver={handleDragOver}
-              onPaste={(e) => handlePaste(e, 'person')}
-              tabIndex={0}
-              style={{ display: 'flex', cursor: 'pointer' }}
-            >
-              {personImage ? (
-                <img 
-                  src={personImage.preview} 
-                  alt="Your photo" 
-                  className="preview-image"
-                />
-              ) : (
-                <div className="upload-placeholder">
-                  <span className="upload-icon">📸</span>
-                  <p className="upload-text">Tap to upload your photo</p>
-                  <p className="upload-hint">or drag and drop</p>
-                </div>
-              )}
-            </label>
-            <input
-              id="person-upload"
-              ref={personInputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                console.log('Person Input Changed', e.target.files);
-                handleImageUpload(e, 'person');
-              }}
-              onClick={(e) => e.target.value = null}
-              style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}
-            />
-            <div className="upload-actions">
-              <button 
-                className="upload-action-button camera"
-                onClick={(e) => { e.stopPropagation(); openCamera('person'); }}
-              >
-                📷 Take Photo
-              </button>
-              <button 
-                className="upload-action-button gallery"
-                onClick={() => document.getElementById('person-upload').click()}
-              >
-                🖼️ From Gallery
-              </button>
-            </div>
-          </div>
+          <UploadCard 
+            title="Your Photo"
+            id="person-upload"
+            image={personImage}
+            placeholderIcon="📸"
+            placeholderText="Tap to upload your photo"
+            onFileChange={(e) => {
+              console.log('Person Input Changed', e.target.files);
+              handleImageUpload(e, 'person');
+            }}
+            onDrop={(e) => handleDrop(e, 'person')}
+            onPaste={(e) => handlePaste(e, 'person')}
+            onCamera={() => openCamera('person')}
+            inputRef={personInputRef}
+          />
 
           {/* Clothing Image Upload */}
           <div className="upload-card">

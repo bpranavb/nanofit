@@ -441,17 +441,71 @@ const TryOnApp = () => {
       </header>
 
       <div className="app-container">
-        
-        {/* Result Section (Replaces Inputs) */}
-        {resultImage ? (
+        {/* Input Section */}
+        <div className="input-section">
+          {/* Person Image Upload */}
+          <UploadCard 
+            title="Your Photo"
+            id="person-upload"
+            image={personImage}
+            placeholderIcon="📸"
+            placeholderText="Tap to upload your photo"
+            onFileChange={(e) => {
+              console.log('Person Input Changed', e.target.files);
+              handleImageUpload(e, 'person');
+            }}
+            onDrop={(e) => handleDrop(e, 'person')}
+            onPaste={(e) => handlePaste(e, 'person')}
+            onCamera={() => openCamera('person')}
+            inputRef={personInputRef}
+          />
+
+          {/* Clothing Image Upload */}
+          <UploadCard 
+            title="Clothing Photo"
+            id="clothing-upload"
+            image={clothingImage}
+            placeholderIcon="👗"
+            placeholderText="Tap to upload clothing"
+            onFileChange={(e) => {
+              console.log('Clothing Input Changed', e.target.files);
+              handleImageUpload(e, 'clothing');
+            }}
+            onDrop={(e) => handleDrop(e, 'clothing')}
+            onPaste={(e) => handlePaste(e, 'clothing')}
+            onCamera={() => openCamera('clothing')}
+            inputRef={clothingInputRef}
+          />
+        </div>
+
+        {/* Action Section */}
+        <div className="action-section">
+          <button 
+            className="generate-button"
+            onClick={handleGenerate}
+            disabled={loading || !personImage || !clothingImage}
+          >
+            {loading ? 'Generating...' : 'Generate Try-On'}
+          </button>
+          
+          {error && (
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
+              {error}
+            </div>
+          )}
+        </div>
+
+        {/* Result Section (Shown below inputs) */}
+        {resultImage && (
           <div className="result-section">
             <h3 className="result-title">Your Virtual Try-On Result</h3>
             
-            <div className="result-slider-wrapper">
-              <BeforeAfterSlider
-                beforeImage={personImage.preview}
-                afterImage={resultImage}
-                alt="Try-On Result"
+            <div className="result-container">
+              <img 
+                src={resultImage} 
+                alt="Try-on result" 
+                className="result-image"
               />
             </div>
             
@@ -497,65 +551,6 @@ const TryOnApp = () => {
               </button>
             </div>
           </div>
-        ) : (
-          /* Input Section (Hidden when result is shown) */
-          <>
-            <div className="input-section">
-              {/* Person Image Upload */}
-              <UploadCard 
-                title="Your Photo"
-                id="person-upload"
-                image={personImage}
-                placeholderIcon="📸"
-                placeholderText="Tap to upload your photo"
-                onFileChange={(e) => {
-                  console.log('Person Input Changed', e.target.files);
-                  handleImageUpload(e, 'person');
-                }}
-                onDrop={(e) => handleDrop(e, 'person')}
-                onPaste={(e) => handlePaste(e, 'person')}
-                onCamera={() => openCamera('person')}
-                inputRef={personInputRef}
-              />
-
-              {/* Clothing Image Upload */}
-              <UploadCard 
-                title="Clothing Photo"
-                id="clothing-upload"
-                image={clothingImage}
-                placeholderIcon="👗"
-                placeholderText="Tap to upload clothing"
-                onFileChange={(e) => {
-                  console.log('Clothing Input Changed', e.target.files);
-                  handleImageUpload(e, 'clothing');
-                }}
-                onDrop={(e) => handleDrop(e, 'clothing')}
-                onPaste={(e) => handlePaste(e, 'clothing')}
-                onCamera={() => openCamera('clothing')}
-                inputRef={clothingInputRef}
-              />
-            </div>
-
-            {/* Action Section */}
-            <div className="action-section">
-              <button 
-                className="generate-button"
-                onClick={handleGenerate}
-                disabled={loading || !personImage || !clothingImage}
-              >
-                {loading ? 'Generating...' : 'Generate Try-On'}
-              </button>
-              
-              {/* loadingMessage removed - moved to overlay */}
-              
-              {error && (
-                <div className="error-message">
-                  <span className="error-icon">⚠️</span>
-                  {error}
-                </div>
-              )}
-            </div>
-          </>
         )}
       </div>
       {/* Loading Overlay */}

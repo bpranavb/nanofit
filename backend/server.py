@@ -14,6 +14,8 @@ import base64
 from google import genai
 from google.genai import types
 import httpx
+from PIL import Image
+import io
 
 
 ROOT_DIR = Path(__file__).parent

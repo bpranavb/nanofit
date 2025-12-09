@@ -177,7 +177,7 @@ const TryOnApp = () => {
       console.log(`Uploading ${type}:`, file.name, file.type, file.size);
       
       // Compress and resize using modern method
-      const { base64, preview } = await resizeImage(file);
+      const { base64, preview } = await processFile(file);
       
       // Debug Alert 2
       // alert('Resize successful');
@@ -210,7 +210,7 @@ const TryOnApp = () => {
       if (item.type.indexOf('image') !== -1) {
         const file = item.getAsFile();
         try {
-          const { base64, preview } = await resizeImage(file);
+          const { base64, preview } = await processFile(file);
           
           if (type === 'person') {
             setPersonImage({ base64, preview });
@@ -240,7 +240,7 @@ const TryOnApp = () => {
 
     try {
       // Compress and resize using modern method
-      const { base64, preview } = await resizeImage(file);
+      const { base64, preview } = await processFile(file);
       
       if (type === 'person') {
         setPersonImage({ base64, preview });

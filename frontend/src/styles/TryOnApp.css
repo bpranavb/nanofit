@@ -174,17 +174,21 @@
 
 .upload-actions {
   display: flex;
+  flex-direction: row; /* Always row */
+  flex-wrap: nowrap; /* Never wrap */
   gap: 1rem;
   margin-top: 1.5rem;
-  /* Ensure flexible row layout by default */
-  flex-direction: row;
-  flex-wrap: nowrap;
+  width: 100%;
 }
 
 .upload-action-button {
   flex: 1;
   padding: 0.8rem;
   border-radius: var(--radius-md);
+  min-width: 0; /* Allow button to shrink below content size if needed */
+  white-space: nowrap; /* Keep text on one line */
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 0.95rem;
   font-weight: 500;
   border: 1px solid var(--color-border);

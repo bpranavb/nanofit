@@ -419,6 +419,17 @@
     padding: 1.5rem;
   }
 }
+  /* Force row layout on mobile/tablet */
+  .upload-actions {
+    flex-direction: row !important;
+    gap: 0.5rem;
+  }
+  
+  /* Adjust button padding for smaller screens to fit side-by-side */
+  .upload-action-button {
+    padding: 0.8rem 0.5rem;
+    font-size: 0.9rem;
+  }
   /* On mobile/portrait, cover might be better to fill the box, 
      but let's stick to contain to ensure heads aren't cut off */
   .preview-image {

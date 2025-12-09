@@ -5,34 +5,31 @@
   width: 100%;
   height: 100vh;
   height: 100dvh;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.95); /* More opaque */
+  backdrop-filter: blur(16px);
   z-index: 2000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeIn 0.4s ease-out;
 }
 
 .loading-content {
   text-align: center;
   position: relative;
-  padding: 3rem;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 40px;
-  box-shadow: 0 20px 60px rgba(177, 156, 217, 0.25);
-  border: 2px solid rgba(221, 160, 221, 0.3);
+  padding: 4rem;
+  background: transparent; /* Cleaner look */
   max-width: 90%;
-  width: 500px;
+  width: 600px;
 }
 
-/* Magic Ring Animation */
+/* Minimalist Ring Animation */
 .magic-ring-container {
   position: relative;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 2.5rem;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 3rem;
 }
 
 .magic-ring {
@@ -42,99 +39,60 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 4px solid transparent;
-  border-top-color: #b19cd9;
-  border-right-color: #dda0dd;
-  animation: spin 1.5s linear infinite;
-}
-
-.magic-ring::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  border-radius: 50%;
-  border: 4px solid transparent;
-  border-top-color: #dda0dd;
-  border-left-color: #b19cd9;
-  animation: spin 2s linear infinite reverse;
-}
-
-.magic-ring::after {
-  content: '';
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
-  border-radius: 50%;
-  border: 4px solid transparent;
-  border-top-color: #9c27b0;
-  animation: spin 3s linear infinite;
+  border: 3px solid rgba(99, 102, 241, 0.1); /* Very light violet */
+  border-top-color: var(--color-accent-secondary);
+  animation: spin 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
 }
 
 .magic-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3rem;
-  animation: pulse 2s ease-in-out infinite;
+  display: none; /* Removed for minimalist look */
 }
 
-/* Text Animations */
+/* Typography */
 .loading-title {
-  font-size: 2rem;
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #2d2d2d;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #9c27b0 0%, #b19cd9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--color-text-primary);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
 }
 
 .loading-step {
-  font-size: 1.4rem;
-  color: #666;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
   font-weight: 500;
-  min-height: 2em; /* Prevent layout jump */
+  min-height: 2em;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: slideUpFade 0.5s ease-out;
+  animation: slideUpFade 0.4s ease-out;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
 }
 
 /* Progress Bar */
 .progress-container {
-  margin-top: 2.5rem;
+  margin-top: 3rem;
   width: 100%;
-  height: 8px;
-  background: #f0f0f0;
-  border-radius: 10px;
+  height: 2px; /* Ultra thin */
+  background: rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #dda0dd, #b19cd9, #9c27b0);
-  background-size: 200% 100%;
-  animation: shimmer 2s linear infinite;
-  width: 100%; /* In a real app, this could be dynamic */
-  border-radius: 10px;
+  background: var(--color-accent-secondary);
+  width: 0%;
+  animation: progressFill 15s linear forwards; /* Simulated progress */
 }
 
 /* Keyframes */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
 }
 
 @keyframes fadeIn {
@@ -153,9 +111,12 @@
   }
 }
 
-@keyframes shimmer {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
+@keyframes progressFill {
+  0% { width: 0%; }
+  20% { width: 20%; }
+  50% { width: 45%; }
+  80% { width: 85%; }
+  100% { width: 95%; }
 }
 
 /* Mobile Adjustments */
@@ -165,20 +126,7 @@
     width: 90%;
   }
   
-  .magic-ring-container {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .magic-icon {
-    font-size: 2.5rem;
-  }
-  
   .loading-title {
-    font-size: 1.6rem;
-  }
-  
-  .loading-step {
-    font-size: 1.1rem;
+    font-size: 1.8rem;
   }
 }

@@ -501,7 +501,7 @@ const TryOnApp = () => {
 
         {/* Result Section (Shown below inputs) */}
         {resultImage && (
-          <div className="result-section">
+          <div className="result-section" ref={resultSectionRef}>
             <h3 className="result-title">Your Virtual Try-On Result</h3>
             
             <div className="result-container">

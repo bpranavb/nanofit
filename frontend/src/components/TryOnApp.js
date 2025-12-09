@@ -448,58 +448,21 @@ const TryOnApp = () => {
           />
 
           {/* Clothing Image Upload */}
-          <div className="upload-card">
-            <h3 className="upload-title">Clothing Photo</h3>
-            <label 
-              className="upload-area"
-              htmlFor="clothing-upload"
-              onDrop={(e) => handleDrop(e, 'clothing')}
-              onDragOver={handleDragOver}
-              onPaste={(e) => handlePaste(e, 'clothing')}
-              tabIndex={0}
-              style={{ display: 'flex', cursor: 'pointer' }}
-            >
-              {clothingImage ? (
-                <img 
-                  src={clothingImage.preview} 
-                  alt="Clothing" 
-                  className="preview-image"
-                />
-              ) : (
-                <div className="upload-placeholder">
-                  <span className="upload-icon">👗</span>
-                  <p className="upload-text">Tap to upload clothing</p>
-                  <p className="upload-hint">or drag and drop</p>
-                </div>
-              )}
-            </label>
-            <input
-              id="clothing-upload"
-              ref={clothingInputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                console.log('Clothing Input Changed', e.target.files);
-                handleImageUpload(e, 'clothing');
-              }}
-              onClick={(e) => e.target.value = null}
-              style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}
-            />
-            <div className="upload-actions">
-              <button 
-                className="upload-action-button camera"
-                onClick={(e) => { e.stopPropagation(); openCamera('clothing'); }}
-              >
-                📷 Take Photo
-              </button>
-              <button 
-                className="upload-action-button gallery"
-                onClick={() => document.getElementById('clothing-upload').click()}
-              >
-                🖼️ From Gallery
-              </button>
-            </div>
-          </div>
+          <UploadCard 
+            title="Clothing Photo"
+            id="clothing-upload"
+            image={clothingImage}
+            placeholderIcon="👗"
+            placeholderText="Tap to upload clothing"
+            onFileChange={(e) => {
+              console.log('Clothing Input Changed', e.target.files);
+              handleImageUpload(e, 'clothing');
+            }}
+            onDrop={(e) => handleDrop(e, 'clothing')}
+            onPaste={(e) => handlePaste(e, 'clothing')}
+            onCamera={() => openCamera('clothing')}
+            inputRef={clothingInputRef}
+          />
         </div>
 
         {/* Action Section */}

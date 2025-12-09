@@ -701,6 +701,8 @@ const TryOnApp = () => {
           </div>
         )}
       </div>
+      {/* Loading Overlay */}
+      {loading && <LoadingOverlay message={loadingMessage} />}
     </div>
   );
 };

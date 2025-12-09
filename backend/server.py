@@ -367,7 +367,8 @@ The output image's clothing must be a perfect visual match to the garment in Ima
         
         # Minimal config - let model use defaults
         config = types.GenerateContentConfig(
-            response_modalities=["IMAGE"]
+            response_modalities=["IMAGE"],
+            aspect_ratio=target_aspect_ratio
         )
         
         # Create a Content object with all parts

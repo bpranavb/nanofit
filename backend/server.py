@@ -488,8 +488,8 @@ async def submit_feedback(feedback: FeedbackRequest):
     Submit customer feedback for a try-on result
     """
     try:
-        # Verify try-on exists
-        tryon = await db.tryons.find_one({"id": feedback.tryon_id})
+        # Verify try-on exists - optimized to fetch only ID
+        tryon = await db.tryons.find_one({"id": feedback.tryon_id}, {"_id": 1})
         if not tryon:
             raise HTTPException(status_code=404, detail="Try-on not found")
         

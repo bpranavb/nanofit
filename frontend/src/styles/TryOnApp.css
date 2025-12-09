@@ -177,6 +177,9 @@
   gap: 1rem;
   margin-top: 1.5rem;
 }
+  /* Ensure flexible row layout by default */
+  flex-direction: row;
+  flex-wrap: nowrap;
 
 .upload-action-button {
   flex: 1;

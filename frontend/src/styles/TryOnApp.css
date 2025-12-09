@@ -424,17 +424,3 @@
   .preview-image {
     object-fit: contain;
   }
-
-  /* Force row layout on mobile/tablet */
-    display: flex !important;
-  .upload-actions {
-    flex-direction: row !important;
-    gap: 0.5rem;
-    flex-wrap: nowrap !important;
-  }
-  
-  /* Adjust button padding for smaller screens to fit side-by-side */
-  .upload-action-button {
-    padding: 0.8rem 0.5rem;
-    font-size: 0.9rem;
-  }

@@ -34,6 +34,7 @@ const TryOnApp = () => {
   const personInputRef = useRef(null);
   const clothingInputRef = useRef(null);
 
+  const resultSectionRef = useRef(null);
   // Load history from localStorage on mount
   useEffect(() => {
     const savedHistory = localStorage.getItem('tryonHistory');

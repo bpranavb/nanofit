@@ -317,6 +317,9 @@
   .demo-slider-container {
     height: 500px;
   }
+  .hero-content .cta-button {
+    align-self: center;
+  }
 }
 
 @media (max-width: 768px) {

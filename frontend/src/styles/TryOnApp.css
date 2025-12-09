@@ -328,6 +328,34 @@
   background: #000;
 }
 
+/* Feedback Section */
+.feedback-prompt {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.feedback-button {
+  padding: 1rem 2.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-accent-secondary);
+  background: transparent;
+  border: 1px solid var(--color-accent-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feedback-button:hover {
+  background: var(--color-accent-secondary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }

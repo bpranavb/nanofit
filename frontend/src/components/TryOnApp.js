@@ -532,9 +532,8 @@ const TryOnApp = () => {
 
             <div className="action-section" style={{ marginTop: '2rem' }}>
               <button 
-                className="generate-button"
+                className="generate-button secondary"
                 onClick={handleStartOver}
-                style={{ background: 'linear-gradient(135deg, #b19cd9 0%, #dda0dd 100%)' }}
               >
                 Start Over
               </button>

@@ -187,3 +187,5 @@ agent_communication:
       message: "Updated webhook URL back to production endpoint: https://spantra.app.n8n.cloud/webhook/upload (removed '/webhook-test' from path). Backend restarted successfully with PID 5930."
     - agent: "main"
       message: "Implemented new upload API flow (Option 1 with IDs). Added POST /api/upload/person and POST /api/upload/clothing endpoints that return upload_id. Modified POST /api/tryon to accept either upload IDs OR direct images (backward compatible). New flow: 1) Upload images separately, 2) Get upload_ids, 3) Call /api/tryon with IDs. Old direct image flow still works. Images stored in MongoDB 'uploads' collection. Backend restarted successfully with PID 342. Needs testing."
+    - agent: "main"
+      message: "Fixed critical Samsung Tablet upload issue (verified by user). Implemented new LoadingOverlay UI and refactored TryOnApp.js into smaller components."

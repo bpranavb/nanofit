@@ -104,11 +104,11 @@ const CameraCapture = ({ onCapture, onClose, type }) => {
       <div className="camera-container">
         <div className="camera-header">
           <h2>Capture {type === 'person' ? 'Person' : 'Clothing'} Photo</h2>
+          <button className="camera-button switch" onClick={toggleCamera}>
+            <span className="camera-icon">🔄</span>
+            Switch
+          </button>
           <button className="close-button" onClick={() => { stopCamera(); onClose(); }}>
-              <button className="camera-button switch" onClick={toggleCamera}>
-                <span className="camera-icon">🔄</span>
-                Switch
-              </button>
             ✕
           </button>
         </div>

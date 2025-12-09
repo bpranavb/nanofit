@@ -343,7 +343,7 @@ You are an expert digital tailor. Your task is to execute a precise clothing/acc
 
 **--- CRITICAL RULES ---**
 
-1.  **PRESERVE THE CANVAS:** Keep the original pose and background exactly as they are.
+1.  **PRESERVE THE CANVAS:** Keep the original pose, background, and **ASPECT RATIO** exactly as they are in Image 1. Do not crop, stretch, or resize the person.
 2.  **SMART MAPPING (Headwear Exception):** 
     - generally, do NOT edit the head or hair.
     - **HOWEVER**, if the source item is **HEADWEAR** (hat, cap, beanie, sunglasses, etc.), you **MUST** apply it to the person's head/face appropriately, modifying hair/head shape only as needed to fit the item realistically.
@@ -356,10 +356,10 @@ You are an expert digital tailor. Your task is to execute a precise clothing/acc
 2.  **Map Target:** 
     - If Shirt/Pants/Dress -> Map to body, exclude head/hands.
     - If Hat/Glasses -> Map to head/face, preserving identity features underneath.
-3.  **Render:** Generate the photorealistic result.
+3.  **Render:** Generate the photorealistic result within the exact bounds of Image 1.
 
 **!! FINAL MANDATE !!**
-Identity protected. Clothing/Accessory perfectly transferred. Photorealistic."""
+Identity protected. Clothing/Accessory perfectly transferred. Photorealistic. No stretching or distortion."""
         
         optimized_text_part = types.Part(text=text_prompt)
         

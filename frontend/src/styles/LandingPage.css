@@ -25,6 +25,10 @@
 
 .hero-title {
   font-family: var(--font-heading);
+/* Ensure slider images are aligned to top to prevent head cropping */
+.before-after-slider img {
+  object-position: top center !important;
+}
   font-size: 4.5rem;
   font-weight: 700;
   line-height: 1.1;

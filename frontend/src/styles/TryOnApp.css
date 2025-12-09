@@ -167,6 +167,10 @@
   height: 100%;
   object-fit: cover;
 }
+  /* Ensure image fits container without distortion */
+  object-position: center; 
+  /* On landscape/desktop, containment ensures we see the whole image */
+  object-fit: contain;
 
 .upload-actions {
   display: grid;

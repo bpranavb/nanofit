@@ -288,6 +288,22 @@
 }
 
 /* Share Section */
+/* Before After Slider Result Optimization */
+.result-slider-wrapper {
+  width: 100%;
+  max-width: 800px;
+  height: 600px;
+  margin: 0 auto 3rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 40px var(--color-shadow);
+}
+
+@media (max-width: 768px) {
+  .result-slider-wrapper {
+    height: 450px;
+  }
+}
 .share-section {
   margin-top: 3rem;
 }

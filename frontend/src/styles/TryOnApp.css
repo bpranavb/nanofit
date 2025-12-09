@@ -421,6 +421,7 @@
 }
   /* Force row layout on mobile/tablet */
   .upload-actions {
+    display: flex !important;
     flex-direction: row !important;
     gap: 0.5rem;
     flex-wrap: nowrap !important;

@@ -233,13 +233,19 @@ async def create_tryon(request: TryOnRequest):
             # Mode 1: Using upload IDs
             logger.info("Using upload IDs mode")
             
-            # Fetch person image from uploads collection
-            person_upload = await db.uploads.find_one({"upload_id": request.person_upload_id})
+            # Fetch person image from uploads collection - Explicitly project image_data
+            person_upload = await db.uploads.find_one(
+                {"upload_id": request.person_upload_id},
+                {"image_data": 1, "_id": 0}
+            )
             if not person_upload:
                 raise HTTPException(status_code=404, detail=f"Person upload ID not found: {request.person_upload_id}")
             
-            # Fetch clothing image from uploads collection
-            clothing_upload = await db.uploads.find_one({"upload_id": request.clothing_upload_id})
+            # Fetch clothing image from uploads collection - Explicitly project image_data
+            clothing_upload = await db.uploads.find_one(
+                {"upload_id": request.clothing_upload_id},
+                {"image_data": 1, "_id": 0}
+            )
             if not clothing_upload:
                 raise HTTPException(status_code=404, detail=f"Clothing upload ID not found: {request.clothing_upload_id}")
             

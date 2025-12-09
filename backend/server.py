@@ -287,6 +287,29 @@ async def create_tryon(request: TryOnRequest):
         person_mime = detect_mime_type(person_image_bytes)
         clothing_mime = detect_mime_type(clothing_image_bytes)
         
+        # Calculate aspect ratio from person image
+        try:
+            with Image.open(io.BytesIO(person_image_bytes)) as img:
+                width, height = img.size
+                ratio = width / height
+                
+                # Determine closest supported aspect ratio for Gemini
+                # Supported: "1:1", "3:4", "4:3", "9:16", "16:9"
+                supported_ratios = {
+                    "1:1": 1.0,
+                    "3:4": 0.75,
+                    "4:3": 1.33,
+                    "9:16": 0.5625,
+                    "16:9": 1.77
+                }
+                
+                closest_ratio = min(supported_ratios.items(), key=lambda x: abs(x[1] - ratio))
+                target_aspect_ratio = closest_ratio[0]
+                logger.info(f"Input dimensions: {width}x{height} (Ratio: {ratio:.2f}). Target Gemini Ratio: {target_aspect_ratio}")
+        except Exception as e:
+            logger.warning(f"Failed to calculate aspect ratio: {e}")
+            target_aspect_ratio = "1:1" # Default fallback
+        
         logger.info(f"Person image mime type: {person_mime}")
         logger.info(f"Clothing image mime type: {clothing_mime}")
         

@@ -6,6 +6,7 @@ import HistoryPanel from './HistoryPanel';
 import FeedbackForm from './FeedbackForm';
 import FeedbackViewer from './FeedbackViewer';
 import '../styles/TryOnApp.css';
+import BeforeAfterSlider from './BeforeAfterSlider';
 import LoadingOverlay from './LoadingOverlay';
 import UploadCard from './UploadCard';
 import useImageProcessor from '../hooks/useImageProcessor';

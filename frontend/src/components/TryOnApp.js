@@ -54,6 +54,14 @@ const TryOnApp = () => {
       }
     }
   }, []);
+  // Auto-scroll to result when it appears
+  useEffect(() => {
+    if (resultImage && resultSectionRef.current) {
+      setTimeout(() => {
+        resultSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [resultImage]);
   // Enhanced Thinking UI
   useEffect(() => {
     if (!loading) return;

@@ -6,7 +6,8 @@ import TryOnApp from "./components/TryOnApp";
 
 function App() {
   return (
-    <div className="App">
+    // Added 'font-sans' to apply Inter and 'bg-surface-primary' for the theme
+    <div className="App font-sans bg-surface-primary min-h-screen">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />

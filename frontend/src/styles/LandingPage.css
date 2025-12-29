@@ -1,306 +1,117 @@
+/* Core Layout Updates */
 .landing-page {
   min-height: 100vh;
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background-color: #020617; /* Solid deep dark background */
+  color: #ffffff;
+  overflow-x: hidden;
 }
 
-/* Hero Section */
+/* Updated Hero Section: Side-by-Side Grid */
 .hero-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  display: grid !important; /* Changed from flex to grid */
+  grid-template-columns: 1.2fr 1fr; /* Text gets slightly more space */
   align-items: center;
-  max-width: 1440px;
+  gap: 4rem;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 8rem 2rem 6rem;
+  padding: 8rem 2rem;
   min-height: 90vh;
+  position: relative;
+  text-align: left; /* Left align text for the side-by-side look */
 }
 
 .hero-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  max-width: 600px;
+  z-index: 10;
 }
 
 .hero-title {
   font-family: var(--font-heading);
-/* Ensure slider images are aligned to top to prevent head cropping */
-.before-after-slider img {
-  object-position: top center !important;
-}
-  font-size: 4.5rem;
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--color-text-primary);
-  margin: 0;
-  letter-spacing: -0.03em;
+  font-size: 5.5rem; /* Slightly larger for the grid layout */
+  font-weight: 800;
+  line-height: 1.05;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.04em;
+  display: block;
 }
 
-.gradient-text {
-  color: var(--color-accent-secondary);
-  background: none;
-  -webkit-text-fill-color: initial;
+.hero-title span {
+  background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.4));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-subtitle {
   font-family: var(--font-body);
   font-size: 1.25rem;
   line-height: 1.6;
-  color: var(--color-text-secondary);
-  margin: 0;
-  font-weight: 400;
+  color: #94a3b8;
+  margin-bottom: 2.5rem;
+  max-width: 550px;
 }
 
-.cta-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.2rem 3rem;
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: white;
-  background: var(--color-accent-primary);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  align-self: flex-start;
-  min-height: auto;
-  box-shadow: none;
-}
-
-.cta-button:hover {
-  background: var(--color-accent-hover);
-  transform: translateY(-2px);
-}
-
-.cta-button:active {
-  transform: translateY(0);
-}
-
-.cta-button.secondary {
-  background: transparent;
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
-}
-
-.cta-button.secondary:hover {
-  background: var(--color-bg-secondary);
-  border-color: var(--color-text-primary);
-}
-
-.arrow {
-  font-size: 1.2rem;
-  transition: transform var(--transition-fast);
-}
-
-.cta-button:hover .arrow {
-  transform: translateX(4px);
-}
-
-.hero-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.demo-slider-container {
-  width: 100%;
-  height: 600px;
-  position: relative;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-
-/* Features Section */
+/* Feature Cards - Glassmorphism Style */
 .features-section {
-  max-width: 1440px;
-  margin: 0 auto;
   padding: 8rem 2rem;
-  text-align: center;
-  background: var(--color-bg-secondary);
-}
-
-.section-title {
-  font-family: var(--font-heading);
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 4rem;
-  letter-spacing: -0.02em;
+  background: transparent;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 4rem;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .feature-card {
-  background: var(--color-bg-primary);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px);
   padding: 3rem 2rem;
-  border-radius: var(--radius-lg);
-  box-shadow: none;
-  border: 1px solid transparent;
-  transition: all var(--transition-fast);
-  text-align: left;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--color-border);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-5px);
 }
 
-.feature-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-  display: inline-block;
-  padding: 1rem;
-  background: var(--color-bg-secondary);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-}
-
-.feature-title {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin: 1rem 0;
-}
-
-.feature-description {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-}
-
-/* How It Works Section */
-.how-it-works-section {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 8rem 2rem;
-  text-align: center;
-  background: var(--color-bg-primary);
-}
-
-.steps-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2rem;
-  margin-top: 5rem;
-  flex-wrap: wrap;
-}
-
-.step {
-  flex: 1;
-  min-width: 250px;
-  max-width: 350px;
-  padding: 2rem;
-}
-
-.step-number {
-  width: 60px;
-  height: 60px;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 auto 2rem;
+/* Updated Slider Container for Side-by-Side */
+.demo-slider-container {
+  width: 100%;
+  max-width: 550px; /* Constrain size in grid */
+  aspect-ratio: 4 / 5; /* Taller aspect ratio to match portrait fashion shots */
+  margin-top: 0; /* Removed top margin since it's now side-by-side */
+  box-shadow: 0 50px 100px -20px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2rem;
+  overflow: hidden;
   position: relative;
+  z-index: 10;
 }
 
-/* Add a subtle connecting line logic if desired, or keep simple */
-
-.step-title {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin: 1rem 0;
+/* Ensure slider icon and UI are properly contained */
+.before-after-slider img {
+  object-fit: cover !important;
+  object-position: top center !important;
 }
 
-.step-description {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
-}
-
-.step-arrow {
-  font-size: 2rem;
-  color: var(--color-border);
-  flex-shrink: 0;
-  margin-top: 3rem;
-  font-family: var(--font-heading);
-  font-weight: 300;
-}
-
-/* CTA Section */
-.cta-section {
-  max-width: 100%;
-  margin: 0;
-  padding: 8rem 2rem;
-  text-align: center;
-  background: var(--color-accent-primary);
-  color: white;
-}
-
-.cta-title {
-  font-family: var(--font-heading);
-  font-size: 3.5rem;
+/* Premium Buttons */
+.cta-button {
+  padding: 1rem 2.5rem;
+  border-radius: 9999px;
   font-weight: 700;
-  color: white;
-  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
 }
 
-.cta-description {
-  font-family: var(--font-body);
-  font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
-  margin-bottom: 3rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.cta-section .cta-button.secondary {
-  background: white;
-  color: var(--color-accent-primary);
-  border: none;
-}
-
-.cta-section .cta-button.secondary:hover {
-  background: rgba(255, 255, 255, 0.9);
-}
-
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 3rem 2rem;
-  background: var(--color-bg-primary);
-  color: var(--color-text-secondary);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  border-top: 1px solid var(--color-border);
-}
-
-/* Responsive Adjustments */
+/* Responsive: Stack on mobile */
 @media (max-width: 1024px) {
   .hero-section {
     grid-template-columns: 1fr;
@@ -313,37 +124,63 @@
     align-items: center;
     margin: 0 auto;
   }
-  
+
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 4rem;
   }
-  
+
   .demo-slider-container {
-    height: 500px;
-  }
-  .hero-content .cta-button {
-    align-self: center;
+    margin: 0 auto;
+    max-width: 450px;
   }
 }
+/* 1. The White Circle (Handle) - FIXED POSITIONING */
+.before-after-slider [class*="handle"], 
+.before-after-slider [class*="button"] {
+  background-color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5) !important;
+  border: 2px solid #8b5cf6 !important;
+  z-index: 50 !important;
+  opacity: 1 !important;
+  /* Removed display: flex to prevent the circle from jumping to the top */
+  text-align: center !important;
+  line-height: 36px !important; /* This centers the icon vertically */
+}
 
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.8rem;
-  }
-  
-  .step-arrow {
-    display: none;
-  }
-  
-  .cta-title {
-    font-size: 2.5rem;
-  }
-  
-  .demo-slider-container {
-    height: 400px;
-  }
-  
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
+/* 2. The Icon (↔) inside the handle */
+.before-after-slider [class*="handle"]::after {
+  content: '↔' !important;
+  color: #020617 !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  display: block !important;
+  position: relative !important;
+}
+
+/* 3. Hide any default SVG arrows that might overlap */
+.before-after-slider [class*="handle"] svg,
+.before-after-slider [class*="handle"]::before {
+  display: none !important;
+}
+
+/* 4. Style the 'Before' and 'After' Labels */
+.before-after-slider [class*="label"] {
+  background: rgba(2, 6, 23, 0.7) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(4px) !important;
+  padding: 6px 16px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-size: 11px !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* 5. Ensure the slider line is visible */
+.before-after-slider [class*="line"] {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  width: 2px !important;
 }
